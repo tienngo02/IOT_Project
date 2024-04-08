@@ -27,6 +27,17 @@ try:
 except:
     print("Can not open the port")
 
+relay1_ON  = [2, 6, 0, 0, 0, 255, 185, 91]
+relay1_OFF = [2, 6, 0, 0, 0, 0, 137, 249]
+def setDevice1(state):
+    if state == True:
+        ser.write(relay1_ON)
+    else:
+        ser.write(relay1_OFF)
+    time.sleep(1)
+    # print(serial_read_data(ser))
+
+
 def serial_read_data(ser):
     bytesToRead = ser.inWaiting()
     if bytesToRead > 0:
@@ -40,18 +51,6 @@ def serial_read_data(ser):
         else:
             return -1
     return 0
-
-
-relay1_ON  = [2, 6, 0, 0, 0, 255, 185, 91]
-relay1_OFF = [2, 6, 0, 0, 0, 0, 137, 249]
-
-def setDevice1(state):
-    if state == True:
-        ser.write(relay1_ON)
-    else:
-        ser.write(relay1_OFF)
-    time.sleep(1)
-    print(serial_read_data(ser))
 
 
 soil_temperature =[1, 3, 0, 6, 0, 1, 100, 11]
