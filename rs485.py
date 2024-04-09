@@ -98,25 +98,36 @@ def readMoisture():
     time.sleep(1)
     return serial_read_data(ser)
 
-while True:
-    print("TEST ACTUATOR")
-    setDeviceON(1)
-    time.sleep(1)
-    setDeviceOFF(1)
-    time.sleep(1)
+def writeData(id, state):
+    if state == "1":
+        setDeviceON(id)
+    else:
+        setDeviceOFF(id)
 
-    setDeviceON(2)
-    time.sleep(1)
-    setDeviceOFF(2)
-    time.sleep(1)
+def readSerial(client):
+    client.publish("sensor1", readTemperature())
+    time.sleep(2)
+    client.publish("sensor3", readMoisture())
 
-    setDeviceON(3)
-    time.sleep(1)
-    setDeviceOFF(3)
-    time.sleep(1)
-
-    print("TEST SENSOR")
-    print(readMoisture())
-    time.sleep(1)
-    print(readTemperature())
-    time.sleep(1)
+# while True:
+#     print("TEST ACTUATOR")
+#     setDeviceON(1)
+#     time.sleep(1)
+#     setDeviceOFF(1)
+#     time.sleep(1)
+#
+#     setDeviceON(2)
+#     time.sleep(1)
+#     setDeviceOFF(2)
+#     time.sleep(1)
+#
+#     setDeviceON(3)
+#     time.sleep(1)
+#     setDeviceOFF(3)
+#     time.sleep(1)
+#
+#     print("TEST SENSOR")
+#     print(readMoisture())
+#     time.sleep(1)
+#     print(readTemperature())
+#     time.sleep(1)
