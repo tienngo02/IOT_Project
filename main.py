@@ -7,7 +7,7 @@ from rs485 import *
 
 AIO_FEED_IDs = ["button1", "button2"]
 AIO_USERNAME = "nvtien"
-AIO_KEY = "aio_zDuk12TSAvYnQVTHMjUd96kKPegN"
+AIO_KEY = "aio_zDuk12TSAvYnQVTHMjUd96kKP"
 
 def connected(client):
     print("Ket noi thanh cong ...")
