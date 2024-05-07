@@ -1,47 +1,126 @@
 import sys
+from time import struct_time
 from Adafruit_IO import MQTTClient
 import time
 import random
-# from simple_ai import *
-from rs485 import *
+from fsm_irrigation import *
+import json
+import sched
 
-AIO_FEED_IDs = ["button1", "button2"]
-AIO_USERNAME = "nvtien"
-AIO_KEY = ""
+# create a sample json
+
+# a = {"cycle": 5,
+#     "flow1": 20,
+#     "flow2": 10,
+#     "flow3": 20,
+#     "isActive": True,
+#     "schedulerName": "LỊCH TƯỚI 1",
+#     "startTime": "18:30",
+#     "stopTime": "18:40"
+# }
+
+# Convert JSON to String
+
+# y = json.dumps(a, ensure_ascii=False)
+
+AIO_FEED_IDs = ["scheduler1", "scheduler2", "scheduler3"]
+AIO_USERNAME = "tienngo"
+AIO_KEY = "aio_jfJp97YlbDLMvuDLFoNSWRzwBEkU"
+JSONFILE = 'scheduler_data.json'
+
+scheduler_list, isRunning_list = create_schedule_list()
+
+
+def write_JSON_file(id, payload):
+    try:
+        data = None
+        with open(JSONFILE, 'r', encoding='utf-8') as file:
+            data = json.load(file)
+            if id < len(data):
+                if payload:
+                    try:
+                        data[id] = json.loads(payload)
+                    except json.JSONDecodeError as e:
+                        print("Error decoding payload JSON:", e)
+                else:
+                    print("Payload is empty.")
+            else:
+                print("Invalid schedule ID.")
+        if data:
+            with open(JSONFILE, 'w', encoding='utf-8') as file:
+                json.dump(data, file, indent=4)
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+
+
+def check_scheduler_time():
+    if not scheduler_list:
+        print("The schedule list is empty.")
+        return
+
+    current_time = time.localtime()
+    current_hour = current_time.tm_hour
+    current_minute = current_time.tm_min
+    print("Current time is:", f"{current_hour:02d}:{current_minute:02d}")
+
+    for idx in range(len(scheduler_list)):
+        start_hour, start_minute = map(int, scheduler_list[idx].startTime.split(':'))
+        stop_hour, stop_minute = map(int, scheduler_list[idx].stopTime.split(':'))
+        if not isRunning_list[idx]:
+            if current_hour == start_hour and current_minute == start_minute:
+                if scheduler_list[idx].isActive:
+                    print(f"Scheduler '{scheduler_list[idx].schedulerName}' is active now.")
+                    isRunning_list[idx] = True
+                    # Call function to execute the schedule here
+                else:
+                    print(f"Scheduler '{scheduler_list[idx].schedulerName}' is not active.")
+                    isRunning_list[idx] = False
+
+        if current_hour == stop_hour and current_minute == stop_minute:
+            if isRunning_list[idx]:
+                print(f"Scheduler '{scheduler_list[idx].schedulerName}' is stop now.")
+                isRunning_list[idx] = False
+                # Call function to stop the schedule here
+
 
 def connected(client):
     print("Ket noi thanh cong ...")
     for topic in AIO_FEED_IDs:
         client.subscribe(topic)
 
-def subscribe(client , userdata , mid , granted_qos):
+
+def subscribe(client, userdata, mid, granted_qos):
     print("Subscribe thanh cong ...")
+
 
 def disconnected(client):
     print("Ngat ket noi ...")
-    sys.exit (1)
+    sys.exit(1)
 
-def message(client , feed_id , payload):
+
+def message(client, feed_id, payload):
     print("Nhan du lieu: " + payload + ", feed id:" + feed_id)
-    if feed_id == "button1":
-        writeData(1, payload)
-    if feed_id == "button2":
-        writeData(2, payload)
+    if feed_id == "scheduler1":
+        write_JSON_file(0, payload)
+        scheduler_list[0].set_schedule()
+        scheduler_list[0].print_data()
+    if feed_id == "scheduler2":
+        write_JSON_file(1, payload)
+        scheduler_list[1].set_schedule()
+        scheduler_list[1].print_data()
+    if feed_id == "scheduler3":
+        write_JSON_file(2, payload)
+        scheduler_list[2].set_schedule()
+        scheduler_list[2].print_data()
 
 
-client = MQTTClient(AIO_USERNAME , AIO_KEY)
+client = MQTTClient(AIO_USERNAME, AIO_KEY)
 client.on_connect = connected
 client.on_disconnect = disconnected
 client.on_message = message
 client.on_subscribe = subscribe
 client.connect()
 client.loop_background()
-
-counter = 10
-sensor_type = 0
-counter_ai = 5
-ai_result = ""
-previous_result = ""
 
 while True:
     # counter = counter - 1
@@ -65,15 +144,9 @@ while True:
     #         client.publish("sensor3", light)
     #         sensor_type = 0
 
-    # counter_ai = counter_ai - 1
-    # if counter_ai <= 0:
-    #     counter_ai = 5
-    #     previous_result = ai_result
-    #     ai_result = image_detector()
-    #     print("AI Output: ", ai_result)
-    #     if previous_result != ai_result:
-    #         client.publish("ai", ai_result)
 
-    readSerial(client)
+    # readSerial(client)
+    fsm_irrigation_run(scheduler_list[0])
 
-    time.sleep(2)
+    # time.sleep(1)
+    # client.publish("button1", y)
