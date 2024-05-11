@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/drawable/ic_baseline_get_app_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/drawable/ic_baseline_highlight_off_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml" value="0.18541666666666667" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/drawable/ic_twotone_check_24.xml" value="0.18541666666666667" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/layout/activity_settings.xml" value="0.16927083333333334" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/layout/settings_activity.xml" value="0.16927083333333334" />
+        <entry key="..\:/Study/IOT_Application/IOT_Lab/DemoIoT/app/src/main/res/xml/root_preferences.xml" value="0.25" />
+        <entry key="..\:/Study/IOT_Application/IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Study/IOT_Application/IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_settings.xml" value="0.25" />
+        <entry key="..\:/Study/IOT_Application/IOT_Project_App/DemoIoT/app/src/main/res/layout/home_layout.xml" value="0.2359375" />
+        <entry key="..\:/Study/IOT_Application/IOT_Project_App/DemoIoT/app/src/main/res/layout/schedule_layout.xml" value="0.25" />
+        <entry key="..\:/Study/IOT_Application/IOT_Project_App/DemoIoT/app/src/main/res/layout/statistic_layout.xml" value="0.25" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
+  </component>
+</project>
