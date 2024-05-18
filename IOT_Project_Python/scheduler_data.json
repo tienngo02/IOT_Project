@@ -1,0 +1,35 @@
+[
+    {
+        "cycle": 4,
+        "flow1": 20,
+        "flow2": 10,
+        "flow3": 20,
+        "area": -1,
+        "isActive": true,
+        "schedulerName": "L\u1ecaCH T\u01af\u1edaI 1",
+        "startTime": "11:08",
+        "stopTime": "11:15"
+    },
+    {
+        "cycle": 2,
+        "flow1": 15,
+        "flow2": 8,
+        "flow3": 18,
+        "area": 0,
+        "isActive": false,
+        "schedulerName": "L\u1ecaCH T\u01af\u1edaI 2",
+        "startTime": "11:16",
+        "stopTime": "11:20"
+    },
+    {
+        "cycle": 2,
+        "flow1": 20,
+        "flow2": 10,
+        "flow3": 20,
+        "area": -1,
+        "isActive": true,
+        "schedulerName": "L\u1ecaCH T\u01af\u1edaI 3",
+        "startTime": "17:35",
+        "stopTime": "17:45"
+    }
+]
