@@ -2,6 +2,7 @@ package bku.iot.demoiot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -34,25 +35,42 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+class Constants {
+    public static final String IDLE = "0";
+    public static final String MIXER1 = "1";
+    public static final String MIXER2 = "2";
+    public static final String MIXER3 = "3";
+    public static final String PUMP_IN = "4";
+    public static final String SELECTOR = "5";
+    public static final String PUMP_OUT = "6";
+    public static final String NEXT_CYCLE = "7";
+    public static final String END = "8";
+}
+
 
 public class MainActivity extends AppCompatActivity {
 
     MQTTHelper mqttHelper;
     TextView txtTemp, txtLig, txtHumi;
-    LabeledSwitch btnLED, btnPUMP;
+    TextView txtCycle1, txtCycle2, txtCycle3;
+    TextView txtStatus1, txtStatus2, txtStatus3;
+    LabeledSwitch btnActive1, btnActive2, btnActive3;
     ImageButton btnSettings, btnError;
     TabHost myTabHost;
     String check = "0";
+    JSONObject schedule1 = new JSONObject();
+    JSONObject schedule2 = new JSONObject();
+    JSONObject schedule3 = new JSONObject();
 
     private String password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
 
     String[] API_FEED_URLS = {  "https://io.adafruit.com/api/v2/tienngo/feeds/humidity",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/temperature",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/light",
-                                "https://io.adafruit.com/api/v2/tienngo/feeds/notification",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler1",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler2",
-                                "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler3"};
+                                "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler3",
+                                "https://io.adafruit.com/api/v2/tienngo/feeds/notification"};
 
 
     @Override
@@ -63,8 +81,16 @@ public class MainActivity extends AppCompatActivity {
         txtTemp = findViewById(R.id.txtTemperature);
         txtLig = findViewById(R.id.txtLight);
         txtHumi = findViewById(R.id.txtHumidity);
-        btnLED = findViewById(R.id.btnLED);
-        btnPUMP = findViewById(R.id.btnPUMP);
+        btnActive1 = findViewById(R.id.btnActive1);
+        btnActive2 = findViewById(R.id.btnActive2);
+        btnActive3 = findViewById(R.id.btnActive3);
+        txtCycle1 = findViewById(R.id.txtCycle1);
+        txtCycle2 = findViewById(R.id.txtCycle2);
+        txtCycle3 = findViewById(R.id.txtCycle3);
+        txtStatus1 = findViewById(R.id.txtStatus1);
+        txtStatus2 = findViewById(R.id.txtStatus2);
+        txtStatus3 = findViewById(R.id.txtStatus3);
+
         btnSettings = findViewById(R.id.btnSettings);
         btnError = findViewById(R.id.btnError);
 
@@ -93,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         setDataFromAPIs();
 
-        btnLED.setOnToggledListener(new OnToggledListener() {
+        btnActive1.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
 //                JSONConverter jsonConverter = new JSONConverter();
@@ -101,28 +127,42 @@ public class MainActivity extends AppCompatActivity {
 //                Log.d("TEST", temp);
 //                sendDataMQTT("nvtien/feeds/button1", temp);
 
-                if(isOn == true){
-                    sendDataMQTT("nvtien/feeds/button1","1");
-                    checkSendData("2", btnLED);
-                }
-                else{
-                    sendDataMQTT("nvtien/feeds/button1","0");
-                    checkSendData("1", btnLED);
-                }
+//                if(isOn == true){
+//                    sendDataMQTT("nvtien/feeds/button1","1");
+//                    checkSendData("2", btnLED);
+//                }
+//                else{
+//                    sendDataMQTT("nvtien/feeds/button1","0");
+//                    checkSendData("1", btnLED);
+//                }
             }
         });
 
-        btnPUMP.setOnToggledListener(new OnToggledListener() {
+        btnActive2.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                if(isOn == true){
-                    sendDataMQTT("nvtien/feeds/button2","1");
-                    checkSendData("4", btnPUMP);
-                }
-                else{
-                    sendDataMQTT("nvtien/feeds/button2","0");
-                    checkSendData("3", btnPUMP);
-                }
+//                if(isOn == true){
+//                    sendDataMQTT("nvtien/feeds/button2","1");
+//                    checkSendData("4", btnPUMP);
+//                }
+//                else{
+//                    sendDataMQTT("nvtien/feeds/button2","0");
+//                    checkSendData("3", btnPUMP);
+//                }
+            }
+        });
+
+        btnActive3.setOnToggledListener(new OnToggledListener() {
+            @Override
+            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
+//                if(isOn == true){
+//                    sendDataMQTT("nvtien/feeds/button2","1");
+//                    checkSendData("4", btnPUMP);
+//                }
+//                else{
+//                    sendDataMQTT("nvtien/feeds/button2","0");
+//                    checkSendData("3", btnPUMP);
+//                }
             }
         });
 
@@ -148,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("TEST", "setPassword!");
             password = newKey;
         }
+
         startMQTT();
 
 //        if(!mqttHelper.isConnect()){
@@ -155,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 //            btnPUMP.setEnabled(false);
 //            showErrorMessage("Mất kết nối MQTT ");
 //        }
-
+        Log.d("TEST1", schedule1.toString());
     }
 
     public void sendDataMQTT(String topic, String value){
@@ -184,16 +225,18 @@ public class MainActivity extends AppCompatActivity {
                 keyEditor.putString("aio_key", password);
                 keyEditor.commit();
 
-                btnLED.setEnabled(true);
-                btnPUMP.setEnabled(true);
+                btnActive1.setEnabled(true);
+                btnActive2.setEnabled(true);
+                btnActive3.setEnabled(true);
                 hideErrorMessage();
                 Log.d("TEST", "connectComplete!");
             }
 
             @Override
             public void connectionLost(Throwable cause) {
-                btnLED.setEnabled(false);
-                btnPUMP.setEnabled(false);
+                btnActive1.setEnabled(false);
+                btnActive2.setEnabled(false);
+                btnActive3.setEnabled(false);
                 showErrorMessage("Mất kết nối MQTT ");
                 Log.d("TEST", "connectionLost!");
             }
@@ -210,21 +253,8 @@ public class MainActivity extends AppCompatActivity {
                 else if(topic.contains("humidity")){
                     txtHumi.setText(message.toString()+ "%");
                 }
-                else if(topic.contains("button1")){
-                    if(message.toString().equals("1")){
-                        btnLED.setOn(true);
-                    }
-                    else{
-                        btnLED.setOn(false);
-                    }
-                }
-                else if(topic.contains("button2")){
-                    if(message.toString().equals("1")){
-                        btnPUMP.setOn(true);
-                    }
-                    else{
-                        btnPUMP.setOn(false);
-                    }
+                else if(topic.contains("notification")){
+                    handleNotification(message.toString());
                 }
                 else if(topic.contains("check")){
                     check = message.toString();
@@ -303,13 +333,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
     // Hàm này được gọi khi dữ liệu check được cập nhật
     public void notifyDataUpdated() {
         synchronized (lock) {
             lock.notify(); // Kích thích luồng đang chờ
         }
     }
+
 
     private void setDataFromAPIs() {
         new FetchDataAsyncTask(this).execute(API_FEED_URLS);
@@ -326,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String[] doInBackground(String[]... params) {
             String[] apiUrlArray = params[0];
-            String[] arrayResult = new String[5];
+            String[] arrayResult = new String[7];
             int i = 0;
             for (String apiUrl : apiUrlArray) {
                 StringBuilder result = new StringBuilder();
@@ -359,25 +389,49 @@ public class MainActivity extends AppCompatActivity {
                     String lastValue = json.getString("last_value");
                     Log.d("TEST", lastValue+" "+nameFeed);
 
+                    if(lastValue.equals("null")) continue;
+
                     if (nameFeed.equals("temperature")) {
                         activity.txtTemp.setText(lastValue + "°C");
-                    } else if (nameFeed.equals("light")) {
-                        activity.txtLig.setText(lastValue + "lux");
-                    } else if (nameFeed.equals("humidity")) {
-                        activity.txtHumi.setText(lastValue + "%");
-                    } else if (nameFeed.equals("button1")) {
-                        if (lastValue.equals("1")) {
-                            activity.btnLED.setOn(true);
-                        } else {
-                            activity.btnLED.setOn(false);
-                        }
-                    } else if (nameFeed.equals("button2")) {
-                        if (lastValue.equals("1")) {
-                            activity.btnPUMP.setOn(true);
-                        } else {
-                            activity.btnPUMP.setOn(false);
-                        }
                     }
+                    else if (nameFeed.equals("light")) {
+                        activity.txtLig.setText(lastValue + "lux");
+                    }
+                    else if (nameFeed.equals("humidity")) {
+                        activity.txtHumi.setText(lastValue + "%");
+                    }
+                    else if (nameFeed.equals("notification")) {
+                        activity.handleNotification(lastValue);
+                    }
+                    else if (nameFeed.equals("scheduler1")) {
+                        activity.schedule1 = new JSONObject(lastValue);
+                        String startTime = activity.schedule1.getString("startTime");
+                        activity.txtCycle1.setText(startTime);
+                    }
+                    else if (nameFeed.equals("scheduler2")) {
+                        activity.schedule2 = new JSONObject(lastValue);
+                        String startTime = activity.schedule2.getString("startTime");
+                        activity.txtCycle2.setText(startTime);
+                    }
+                    else if (nameFeed.equals("scheduler3")) {
+                        activity.schedule3 = new JSONObject(lastValue);
+                        String startTime = activity.schedule3.getString("startTime");
+                        activity.txtCycle3.setText(startTime);
+                    }
+
+//                    else if (nameFeed.equals("button1")) {
+//                        if (lastValue.equals("1")) {
+//                            activity.btnLED.setOn(true);
+//                        } else {
+//                            activity.btnLED.setOn(false);
+//                        }
+//                    } else if (nameFeed.equals("button2")) {
+//                        if (lastValue.equals("1")) {
+//                            activity.btnPUMP.setOn(true);
+//                        } else {
+//                            activity.btnPUMP.setOn(false);
+//                        }
+//                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -416,5 +470,66 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
+    private void handleNotification(String message){
+        String[] parts = message.split(",");
+        if (parts[0].equals("0")) {
+            handleStatus(parts, txtStatus1, txtCycle1);
+        }
+        else if (parts[0].equals("1")) {
+            handleStatus(parts, txtStatus2, txtCycle2);
+        }
+        else if (parts[0].equals("2")) {
+            handleStatus(parts, txtStatus3, txtCycle3);
+        }
+        else
+            Log.d("TEST", "Invalid Schedule");
+    }
+
+    @SuppressLint("SetTextI18n")
+    String area = "";
+    private void handleStatus(String[] parts, TextView txtStatus, TextView txtCycle){
+        switch (parts[2]) {
+            case Constants.MIXER1:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                txtStatus.setText("Máy trộn 1");
+                break;
+            case Constants.MIXER2:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                txtStatus.setText("Máy trộn 2");
+                break;
+            case Constants.MIXER3:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                txtStatus.setText("Máy trộn 3");
+                break;
+            case Constants.PUMP_IN:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                txtStatus.setText("Bơm vào");
+                break;
+            case Constants.SELECTOR:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                if (parts[3].equals(0)) area = "Vườn 1";
+                else if (parts[3].equals(1)) area = "Vườn 2";
+                else area = "Vườn 3";
+                txtStatus.setText("Chuẩn bị tưới " + area);
+                break;
+            case Constants.PUMP_OUT:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                txtStatus.setText("Đang tưới " + area);
+                break;
+            case Constants.NEXT_CYCLE:
+                txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
+                txtStatus.setText("Vòng tiếp theo");
+                break;
+            case Constants.END:
+//                txtCycle.setText("Vòng ");
+                txtStatus.setText("Đã kết thúc");
+                break;
+            case Constants.IDLE:
+                break;
+            default:
+                Log.d("TEST", "Invalid Status");
+                break;
+        }
+    }
 
 }

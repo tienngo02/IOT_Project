@@ -112,7 +112,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="aio_Mxmf78a3VtQU5HrYhI0zcGELH5FI" />
+            android:text="" />
 
     </LinearLayout>
 

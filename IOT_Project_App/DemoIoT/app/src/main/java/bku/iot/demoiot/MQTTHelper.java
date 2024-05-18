@@ -21,8 +21,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MQTTHelper {
     public MqttAndroidClient mqttAndroidClient;
 
-    public final String[] arrayTopics = {"nvtien/feeds/sensor1", "nvtien/feeds/sensor2", "nvtien/feeds/sensor3",
-                                         "nvtien/feeds/button1", "nvtien/feeds/button2", "nvtien/feeds/check"};
+    public final String[] arrayTopics = {   "tienngo/feeds/humidity", "tienngo/feeds/temperature", "tienngo/feeds/light",
+                                            "tienngo/feeds/scheduler1", "tienngo/feeds/scheduler2", "tienngo/feeds/scheduler3",
+                                            "tienngo/feeds/notification"};
 
     final String clientId = "123456789";
     final String username = "tienngo";
