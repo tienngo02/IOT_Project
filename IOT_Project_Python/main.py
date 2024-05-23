@@ -25,7 +25,7 @@ import schedule
 
 AIO_FEED_IDs = ["scheduler1", "scheduler2", "scheduler3"]
 AIO_USERNAME = "tienngo"
-AIO_KEY = ""
+AIO_KEY = "aio_crag45SIJwceJtWSksTyWqYR1oKC"
 JSONFILE = 'scheduler_data.json'
 FSM_TASK_TAG = 'fsm_task_tag'
 
@@ -60,6 +60,8 @@ def message(client, feed_id, payload):
         write_JSON_file(2, payload)
         scheduler_list[2].set_schedule()
         scheduler_list[2].print_data()
+
+    client.publish("check", payload)
 
 
 client = MQTTClient(AIO_USERNAME, AIO_KEY)

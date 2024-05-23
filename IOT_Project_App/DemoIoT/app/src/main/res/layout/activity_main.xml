@@ -7,11 +7,70 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:id="@+id/errorContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="@android:color/holo_red_dark"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đã xảy ra lỗi!"
+            android:textColor="#FFFFFF" />
+
+        <ImageButton
+            android:id="@+id/btnError"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            android:src="@drawable/ic_baseline_highlight_off_24" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/logo"></ImageView>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:gravity="center"
+            android:text="IOT DEMO"
+            android:textColor="#1E90FF"
+            android:textSize="30dp"
+            android:textStyle="bold"></TextView>
+
+        <ImageButton
+            android:id="@+id/btnSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:src="@drawable/setting_icon" />
+
+    </LinearLayout>
+
     <TabHost
         android:id="@+id/tabHost"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="9">
 
         <LinearLayout
             android:layout_width="match_parent"

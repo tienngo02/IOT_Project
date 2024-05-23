@@ -42,6 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
         edtKey = findViewById(R.id.edtKey);
         btnErrorSettings = findViewById(R.id.btnErrorSettings);
 
+
         btnGetKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -23,7 +23,7 @@ public class MQTTHelper {
 
     public final String[] arrayTopics = {   "tienngo/feeds/humidity", "tienngo/feeds/temperature", "tienngo/feeds/light",
                                             "tienngo/feeds/scheduler1", "tienngo/feeds/scheduler2", "tienngo/feeds/scheduler3",
-                                            "tienngo/feeds/notification"};
+                                            "tienngo/feeds/notification", "tienngo/feeds/check"};
 
     final String clientId = "123456789";
     final String username = "tienngo";

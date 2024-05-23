@@ -6,7 +6,7 @@ from fsm_irrigation import *
 
 AIO_FEED_IDs = ["scheduler1", "scheduler2", "scheduler3"]
 AIO_USERNAME = "tienngo"
-AIO_KEY = ""
+AIO_KEY = "aio_crag45SIJwceJtWSksTyWqYR1oKC"
 JSONFILE = 'scheduler_data.json'
 
 

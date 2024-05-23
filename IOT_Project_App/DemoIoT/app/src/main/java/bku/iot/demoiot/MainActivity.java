@@ -10,10 +10,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.angads25.toggle.interfaces.OnToggledListener;
 import com.github.angads25.toggle.model.ToggleableView;
@@ -30,10 +32,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class Constants {
     public static final String IDLE = "0";
@@ -51,13 +54,26 @@ class Constants {
 public class MainActivity extends AppCompatActivity {
 
     MQTTHelper mqttHelper;
+
+    //home_layout
     TextView txtTemp, txtLig, txtHumi;
     TextView txtCycle1, txtCycle2, txtCycle3;
     TextView txtStatus1, txtStatus2, txtStatus3;
     LabeledSwitch btnActive1, btnActive2, btnActive3;
     ImageButton btnSettings, btnError;
+
+    //schedule_layout
+    EditText edtSched1Cycle , edtSched1Mix1, edtSched1Mix2, edtSched1Mix3, edtSched1Start, edtSched1Stop, edtSched1Area;
+    EditText edtSched2Cycle,  edtSched2Mix1, edtSched2Mix2, edtSched2Mix3, edtSched2Start, edtSched2Stop, edtSched2Area;
+    EditText edtSched3Cycle,  edtSched3Mix1, edtSched3Mix2, edtSched3Mix3, edtSched3Start, edtSched3Stop, edtSched3Area;
+    LabeledSwitch btnSched1Active, btnSched2Active, btnSched3Active;
+    ImageButton btnSchedule1, btnSchedule2, btnSchedule3;
+
+    //statistic_layout
+    TextView txtAvgTime, txtCountTimes;
+
     TabHost myTabHost;
-    String check = "0";
+    String check = "";
     JSONObject schedule1 = new JSONObject();
     JSONObject schedule2 = new JSONObject();
     JSONObject schedule3 = new JSONObject();
@@ -78,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //home_layout
         txtTemp = findViewById(R.id.txtTemperature);
         txtLig = findViewById(R.id.txtLight);
         txtHumi = findViewById(R.id.txtHumidity);
@@ -90,9 +107,44 @@ public class MainActivity extends AppCompatActivity {
         txtStatus1 = findViewById(R.id.txtStatus1);
         txtStatus2 = findViewById(R.id.txtStatus2);
         txtStatus3 = findViewById(R.id.txtStatus3);
-
         btnSettings = findViewById(R.id.btnSettings);
         btnError = findViewById(R.id.btnError);
+
+        //schedule_layout
+        edtSched1Cycle = findViewById(R.id.edtSched1Cycle);
+        edtSched1Mix1 = findViewById(R.id.edtSched1Mix1);
+        edtSched1Mix2 = findViewById(R.id.edtSched1Mix2);
+        edtSched1Mix3 = findViewById(R.id.edtSched1Mix3);
+        edtSched1Start = findViewById(R.id.edtSched1Start);
+        edtSched1Stop = findViewById(R.id.edtSched1Stop);
+        edtSched1Area = findViewById(R.id.edtSched1Area);
+        btnSched1Active = findViewById(R.id.btnSched1Active);
+        btnSchedule1 = findViewById(R.id.btnSchedule1);
+
+        edtSched2Cycle = findViewById(R.id.edtSched2Cycle);
+        edtSched2Mix1 = findViewById(R.id.edtSched2Mix1);
+        edtSched2Mix2 = findViewById(R.id.edtSched2Mix2);
+        edtSched2Mix3 = findViewById(R.id.edtSched2Mix3);
+        edtSched2Start = findViewById(R.id.edtSched2Start);
+        edtSched2Stop = findViewById(R.id.edtSched2Stop);
+        edtSched2Area = findViewById(R.id.edtSched2Area);
+        btnSched2Active = findViewById(R.id.btnSched2Active);
+        btnSchedule2 = findViewById(R.id.btnSchedule2);
+
+        edtSched3Cycle = findViewById(R.id.edtSched3Cycle);
+        edtSched3Mix1 = findViewById(R.id.edtSched3Mix1);
+        edtSched3Mix2 = findViewById(R.id.edtSched3Mix2);
+        edtSched3Mix3 = findViewById(R.id.edtSched3Mix3);
+        edtSched3Start = findViewById(R.id.edtSched3Start);
+        edtSched3Stop = findViewById(R.id.edtSched3Stop);
+        edtSched3Area = findViewById(R.id.edtSched3Area);
+        btnSched3Active = findViewById(R.id.btnSched3Active);
+        btnSchedule3 = findViewById(R.id.btnSchedule3);
+
+        //statistic_layout
+        txtAvgTime = findViewById(R.id.txtAvgTime);
+        txtCountTimes= findViewById(R.id.txtCountTimes);
+
 
         myTabHost = findViewById(R.id.tabHost);
         myTabHost.setup();
@@ -117,7 +169,13 @@ public class MainActivity extends AppCompatActivity {
         String aioKey = keyPreferences.getString("aio_key","");
         password = aioKey;
 
+        btnActive1.setEnabled(false);
+        btnActive2.setEnabled(false);
+        btnActive3.setEnabled(false);
+
         setDataFromAPIs();
+        setDataStatistic();
+
 
         btnActive1.setOnToggledListener(new OnToggledListener() {
             @Override
@@ -127,42 +185,48 @@ public class MainActivity extends AppCompatActivity {
 //                Log.d("TEST", temp);
 //                sendDataMQTT("nvtien/feeds/button1", temp);
 
-//                if(isOn == true){
-//                    sendDataMQTT("nvtien/feeds/button1","1");
-//                    checkSendData("2", btnLED);
-//                }
-//                else{
-//                    sendDataMQTT("nvtien/feeds/button1","0");
-//                    checkSendData("1", btnLED);
-//                }
+                JSONObject oldSchedule = null;
+                try {
+                    oldSchedule = new JSONObject(schedule1.toString());
+                    schedule1.put("isActive", isOn);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                sendDataMQTT("tienngo/feeds/scheduler1",schedule1.toString());
+                checkSendData(schedule1, oldSchedule, btnActive1);
             }
         });
 
         btnActive2.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-//                if(isOn == true){
-//                    sendDataMQTT("nvtien/feeds/button2","1");
-//                    checkSendData("4", btnPUMP);
-//                }
-//                else{
-//                    sendDataMQTT("nvtien/feeds/button2","0");
-//                    checkSendData("3", btnPUMP);
-//                }
+                JSONObject oldSchedule = null;
+                try {
+                    oldSchedule = new JSONObject(schedule2.toString());
+                    schedule2.put("isActive", isOn);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                sendDataMQTT("tienngo/feeds/scheduler2",schedule2.toString());
+                checkSendData(schedule2, oldSchedule, btnActive2);
             }
         });
 
         btnActive3.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-//                if(isOn == true){
-//                    sendDataMQTT("nvtien/feeds/button2","1");
-//                    checkSendData("4", btnPUMP);
-//                }
-//                else{
-//                    sendDataMQTT("nvtien/feeds/button2","0");
-//                    checkSendData("3", btnPUMP);
-//                }
+                JSONObject oldSchedule = null;
+                try {
+                    oldSchedule = new JSONObject(schedule3.toString());
+                    schedule3.put("isActive", isOn);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                sendDataMQTT("tienngo/feeds/scheduler3",schedule3.toString());
+                checkSendData(schedule3, oldSchedule, btnActive3);
             }
         });
 
@@ -182,6 +246,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnSchedule1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject oldSchedule = null;
+                int area;
+                if(String.valueOf(edtSched1Cycle.getEditableText()).equals("1")) area = 0;
+                else if(String.valueOf(edtSched1Cycle.getEditableText()).equals("2")) area = 1;
+                else if(String.valueOf(edtSched1Cycle.getEditableText()).equals("3")) area = 2;
+                else area = -1;
+                try {
+                    oldSchedule = new JSONObject(schedule1.toString());
+                    // Add key-value pairs to the JSON object
+                    schedule1.put("cycle", Integer.valueOf(String.valueOf(edtSched1Cycle.getEditableText())));
+                    schedule1.put("flow1", Integer.valueOf(String.valueOf(edtSched1Mix1.getEditableText())));
+                    schedule1.put("flow2", Integer.valueOf(String.valueOf(edtSched1Mix2.getEditableText())));
+                    schedule1.put("flow3", Integer.valueOf(String.valueOf(edtSched1Mix3.getEditableText())));
+                    schedule1.put("area", area);
+                    schedule1.put("isActive", btnSched1Active.isOn());
+                    schedule1.put("startTime", String.valueOf(edtSched1Start.getEditableText()));
+                    schedule1.put("stopTime", String.valueOf(edtSched1Stop.getEditableText()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sendDataMQTT("tienngo/feeds/scheduler1",schedule1.toString());
+                checkSendData(schedule1, oldSchedule, btnActive1);
+                btnSchedule1.setEnabled(false);
+//                Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Intent getNewKey = getIntent();
         String newKey = getNewKey.getStringExtra("newKey");
         if(!TextUtils.isEmpty(newKey)) {
@@ -196,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
 //            btnPUMP.setEnabled(false);
 //            showErrorMessage("Mất kết nối MQTT ");
 //        }
-        Log.d("TEST1", schedule1.toString());
     }
+
 
     public void sendDataMQTT(String topic, String value){
         MqttMessage msg = new MqttMessage();
@@ -286,15 +380,15 @@ public class MainActivity extends AppCompatActivity {
 
     private final Object lock = new Object();
 
-    public void checkSendData(String dataCheck, LabeledSwitch btnDevice) {
+    public void checkSendData(JSONObject dataCheck, JSONObject oldData,LabeledSwitch btnDevice) {
         final long TIMEOUT = 5000; // Thời gian chờ tối đa là 5 giây
         final long startTime = System.currentTimeMillis();
 
-        showErrorMessage("Đang gửi dữ liệu ");
         btnDevice.setEnabled(false);
+        showErrorMessage("Đang gửi dữ liệu ");
         new Thread(() -> {
             synchronized (lock) {
-                while (!check.equals(dataCheck) && System.currentTimeMillis() - startTime < TIMEOUT) {
+                while (!check.equals(dataCheck.toString()) && System.currentTimeMillis() - startTime < TIMEOUT) {
                     try {
                         lock.wait(TIMEOUT - (System.currentTimeMillis() - startTime)); // Chờ đến khi có dữ liệu hoặc hết thời gian
                     } catch (InterruptedException e) {
@@ -302,37 +396,64 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if (!check.equals(dataCheck)) {
+                if (!check.equals(dataCheck.toString())) {
                     runOnUiThread(() -> showErrorMessage("Gửi thất bại "));
-//                    btnDevice.setEnabled(true);
-                    if (dataCheck.equals("2")){
-                        btnDevice.setOn(false);
-                        sendDataMQTT("nvtien/feeds/button1","0");
-                    }
-                    else if (dataCheck.equals("4")){
-                        btnDevice.setOn(false);
-                        sendDataMQTT("nvtien/feeds/button2","0");
-                    }
-                    else if (dataCheck.equals("1")){
-                        btnDevice.setOn(true);
-                        sendDataMQTT("nvtien/feeds/button1","1");
-                    }
-                    else {
-                        btnDevice.setOn(true);
-                        sendDataMQTT("nvtien/feeds/button2","1");
-                    }
-                    btnDevice.setEnabled(true);
+                    try {
+                        dataCheck.put("cycle", oldData.getInt("cycle"));
+                        dataCheck.put("flow1", oldData.getInt("flow1"));
+                        dataCheck.put("flow2", oldData.getInt("flow2"));
+                        dataCheck.put("flow3", oldData.getInt("flow3"));
+                        dataCheck.put("area", oldData.getInt("area"));
+                        dataCheck.put("isActive", oldData.getBoolean("isActive"));
+//                        dataCheck.put("schedulerName", oldData.get("schedulerName"));
+                        dataCheck.put("startTime", oldData.getString("startTime"));
+                        dataCheck.put("stopTime", oldData.getString("stopTime"));
+                        btnDevice.setOn(oldData.getBoolean("isActive"));
 
+                        if(dataCheck.getString("schedulerName").equals("LỊCH TƯỚI 1")) {
+                            sendDataMQTT("tienngo/feeds/scheduler1", dataCheck.toString());
+                        }
+                        else if(dataCheck.getString("schedulerName").equals("LỊCH TƯỚI 2")){
+                            sendDataMQTT("tienngo/feeds/scheduler2",dataCheck.toString());
+                        }
+                        else{
+                            sendDataMQTT("tienngo/feeds/scheduler3",dataCheck.toString());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    btnDevice.setEnabled(true);
-                    runOnUiThread(this::hideErrorMessage);
+                    long checkTime = System.currentTimeMillis() - startTime;
+
+                    SharedPreferences totalTimePreferences = getSharedPreferences("totalTime", MODE_PRIVATE);
+                    long totalTime = totalTimePreferences.getLong("total_time",0);
+                    totalTime += checkTime;
+                    SharedPreferences.Editor totalTimeEditor = totalTimePreferences.edit();
+                    totalTimeEditor.putLong("total_time", totalTime);
+                    totalTimeEditor.commit();
+
+                    SharedPreferences countTimesPreferences = getSharedPreferences("countTimes", MODE_PRIVATE);
+                    long countTimes = countTimesPreferences.getLong("count_times",0);
+                    countTimes++;
+                    SharedPreferences.Editor countTimesEditor = countTimesPreferences.edit();
+                    countTimesEditor.putLong("count_times", countTimes);
+                    countTimesEditor.commit();
+
+                    txtAvgTime.setText(String.format("Thời gian gửi nhận trung bình: %dms", totalTime/countTimes));
+                    txtCountTimes.setText(String.format("Số lần gửi thành công: %d", countTimes));
+
+                    runOnUiThread(() -> showErrorMessage(String.format("%dms ", checkTime)));
+                    try {
+                        btnDevice.setOn(dataCheck.getBoolean("isActive"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-
             }
+            btnDevice.setEnabled(true);
         }).start();
-
-
     }
+
     // Hàm này được gọi khi dữ liệu check được cập nhật
     public void notifyDataUpdated() {
         synchronized (lock) {
@@ -342,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setDataFromAPIs() {
-        new FetchDataAsyncTask(this).execute(API_FEED_URLS);
+            new FetchDataAsyncTask(this).execute(API_FEED_URLS);
     }
 
     private static class FetchDataAsyncTask extends AsyncTask<String[], Void, String[]> {
@@ -407,35 +528,58 @@ public class MainActivity extends AppCompatActivity {
                         activity.schedule1 = new JSONObject(lastValue);
                         String startTime = activity.schedule1.getString("startTime");
                         activity.txtCycle1.setText(startTime);
+                        Boolean isActive = activity.schedule1.getBoolean("isActive");
+                        activity.btnActive1.setOn(isActive);
+
+                        activity.edtSched1Cycle.setText(activity.schedule1.getString("cycle"));
+                        activity.edtSched1Mix1.setText(activity.schedule1.getString("flow1"));
+                        activity.edtSched1Mix2.setText(activity.schedule1.getString("flow2"));
+                        activity.edtSched1Mix3.setText(activity.schedule1.getString("flow3"));
+                        activity.edtSched1Start.setText(activity.schedule1.getString("startTime"));
+                        activity.edtSched1Stop.setText(activity.schedule1.getString("stopTime"));
+                        activity.edtSched1Area.setText(activity.schedule1.getString("area"));
+                        activity.btnSched1Active.setOn(isActive);
                     }
                     else if (nameFeed.equals("scheduler2")) {
                         activity.schedule2 = new JSONObject(lastValue);
                         String startTime = activity.schedule2.getString("startTime");
                         activity.txtCycle2.setText(startTime);
+                        Boolean isActive = activity.schedule2.getBoolean("isActive");
+                        activity.btnActive2.setOn(isActive);
+
+                        activity.edtSched2Cycle.setText(activity.schedule2.getString("cycle"));
+                        activity.edtSched2Mix1.setText(activity.schedule2.getString("flow1"));
+                        activity.edtSched2Mix2.setText(activity.schedule2.getString("flow2"));
+                        activity.edtSched2Mix3.setText(activity.schedule2.getString("flow3"));
+                        activity.edtSched2Start.setText(activity.schedule2.getString("startTime"));
+                        activity.edtSched2Stop.setText(activity.schedule2.getString("stopTime"));
+                        activity.edtSched2Area.setText(activity.schedule2.getString("area"));
+                        activity.btnSched2Active.setOn(isActive);
                     }
                     else if (nameFeed.equals("scheduler3")) {
                         activity.schedule3 = new JSONObject(lastValue);
                         String startTime = activity.schedule3.getString("startTime");
                         activity.txtCycle3.setText(startTime);
-                    }
+                        Boolean isActive = activity.schedule3.getBoolean("isActive");
+                        activity.btnActive3.setOn(isActive);
 
-//                    else if (nameFeed.equals("button1")) {
-//                        if (lastValue.equals("1")) {
-//                            activity.btnLED.setOn(true);
-//                        } else {
-//                            activity.btnLED.setOn(false);
-//                        }
-//                    } else if (nameFeed.equals("button2")) {
-//                        if (lastValue.equals("1")) {
-//                            activity.btnPUMP.setOn(true);
-//                        } else {
-//                            activity.btnPUMP.setOn(false);
-//                        }
-//                    }
+                        activity.edtSched3Cycle.setText(activity.schedule3.getString("cycle"));
+                        activity.edtSched3Mix1.setText(activity.schedule3.getString("flow1"));
+                        activity.edtSched3Mix2.setText(activity.schedule3.getString("flow2"));
+                        activity.edtSched3Mix3.setText(activity.schedule3.getString("flow3"));
+                        activity.edtSched3Start.setText(activity.schedule3.getString("startTime"));
+                        activity.edtSched3Stop.setText(activity.schedule3.getString("stopTime"));
+                        activity.edtSched3Area.setText(activity.schedule3.getString("area"));
+                        activity.btnSched3Active.setOn(isActive);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+            activity.btnActive1.setEnabled(true);
+            activity.btnActive2.setEnabled(true);
+            activity.btnActive3.setEnabled(true);
+
         }
     }
 
@@ -531,5 +675,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private void setDataStatistic() {
+        SharedPreferences totalTimePreferences = getSharedPreferences("totalTime", MODE_PRIVATE);
+        long totalTime = totalTimePreferences.getLong("total_time",0);
+
+        SharedPreferences countTimesPreferences = getSharedPreferences("countTimes", MODE_PRIVATE);
+        long countTimes = countTimesPreferences.getLong("count_times",0);
+
+        if(countTimes != 0) {
+            txtAvgTime.setText(String.format("Thời gian gửi nhận trung bình: %dms", totalTime/countTimes));
+        }
+        txtCountTimes.setText(String.format("Số lần gửi thành công: %d", countTimes));
+    }
+
 
 }
