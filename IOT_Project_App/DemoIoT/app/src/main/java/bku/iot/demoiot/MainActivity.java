@@ -78,11 +78,17 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnSettings, btnError;
 
     //schedule_layout
+    ImageButton btnSched1Show, btnSched2Show, btnSched3Show;
+    LinearLayout laySched1Info, laySched2Info, laySched3Info;
     EditText edtSched1Cycle , edtSched1Mix1, edtSched1Mix2, edtSched1Mix3, edtSched1Start, edtSched1Stop, edtSched1Area;
     EditText edtSched2Cycle,  edtSched2Mix1, edtSched2Mix2, edtSched2Mix3, edtSched2Start, edtSched2Stop, edtSched2Area;
     EditText edtSched3Cycle,  edtSched3Mix1, edtSched3Mix2, edtSched3Mix3, edtSched3Start, edtSched3Stop, edtSched3Area;
     LabeledSwitch btnSched1Active, btnSched2Active, btnSched3Active;
     Button btnSchedule1, btnSchedule2, btnSchedule3;
+    Boolean isSched1Show = false;
+    Boolean isSched2Show = false;
+    Boolean isSched3Show = false;
+
 
     //statistic_layout
     TextView txtAvgTime, txtCountTimes;
@@ -124,10 +130,13 @@ public class MainActivity extends AppCompatActivity {
         txtStatus1 = findViewById(R.id.txtStatus1);
         txtStatus2 = findViewById(R.id.txtStatus2);
         txtStatus3 = findViewById(R.id.txtStatus3);
+
         btnSettings = findViewById(R.id.btnSettings);
         btnError = findViewById(R.id.btnError);
 
         //schedule_layout
+        btnSched1Show = findViewById(R.id.btnSched1Show);
+        laySched1Info = findViewById(R.id.laySched1Info);
         edtSched1Cycle = findViewById(R.id.edtSched1Cycle);
         edtSched1Mix1 = findViewById(R.id.edtSched1Mix1);
         edtSched1Mix2 = findViewById(R.id.edtSched1Mix2);
@@ -138,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
         btnSched1Active = findViewById(R.id.btnSched1Active);
         btnSchedule1 = findViewById(R.id.btnSchedule1);
 
+        btnSched2Show = findViewById(R.id.btnSched2Show);
+        laySched2Info = findViewById(R.id.laySched2Info);
         edtSched2Cycle = findViewById(R.id.edtSched2Cycle);
         edtSched2Mix1 = findViewById(R.id.edtSched2Mix1);
         edtSched2Mix2 = findViewById(R.id.edtSched2Mix2);
@@ -148,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         btnSched2Active = findViewById(R.id.btnSched2Active);
         btnSchedule2 = findViewById(R.id.btnSchedule2);
 
+        btnSched3Show = findViewById(R.id.btnSched3Show);
+        laySched3Info = findViewById(R.id.laySched3Info);
         edtSched3Cycle = findViewById(R.id.edtSched3Cycle);
         edtSched3Mix1 = findViewById(R.id.edtSched3Mix1);
         edtSched3Mix2 = findViewById(R.id.edtSched3Mix2);
@@ -347,6 +360,54 @@ public class MainActivity extends AppCompatActivity {
                 sendDataMQTT("tienngo/feeds/scheduler3",schedule3.toString());
                 checkSendData(schedule3, oldSchedule, null, btnSchedule3);
 //                Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnSched1Show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isSched1Show){
+                    laySched1Info.setVisibility(View.VISIBLE);
+                    btnSched1Show.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                    isSched1Show = true;
+                }
+                else{
+                    laySched1Info.setVisibility(View.GONE);
+                    btnSched1Show.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                    isSched1Show = false;
+                }
+            }
+        });
+
+        btnSched2Show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isSched2Show){
+                    laySched2Info.setVisibility(View.VISIBLE);
+                    btnSched2Show.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                    isSched2Show = true;
+                }
+                else{
+                    laySched2Info.setVisibility(View.GONE);
+                    btnSched2Show.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                    isSched2Show = false;
+                }
+            }
+        });
+
+        btnSched3Show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isSched3Show){
+                    laySched3Info.setVisibility(View.VISIBLE);
+                    btnSched3Show.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
+                    isSched3Show = true;
+                }
+                else{
+                    laySched3Info.setVisibility(View.GONE);
+                    btnSched3Show.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
+                    isSched3Show = false;
+                }
             }
         });
 
