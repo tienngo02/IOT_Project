@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,6 +39,19 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class Constants {
     public static final String IDLE = "0";
@@ -67,10 +82,12 @@ public class MainActivity extends AppCompatActivity {
     EditText edtSched2Cycle,  edtSched2Mix1, edtSched2Mix2, edtSched2Mix3, edtSched2Start, edtSched2Stop, edtSched2Area;
     EditText edtSched3Cycle,  edtSched3Mix1, edtSched3Mix2, edtSched3Mix3, edtSched3Start, edtSched3Stop, edtSched3Area;
     LabeledSwitch btnSched1Active, btnSched2Active, btnSched3Active;
-    ImageButton btnSchedule1, btnSchedule2, btnSchedule3;
+    Button btnSchedule1, btnSchedule2, btnSchedule3;
 
     //statistic_layout
     TextView txtAvgTime, txtCountTimes;
+    private LineChart lineChart;
+
 
     TabHost myTabHost;
     String check = "";
@@ -152,17 +169,17 @@ public class MainActivity extends AppCompatActivity {
 
         spec1 = myTabHost.newTabSpec("home");
         spec1.setContent(R.id.tab1);
-        spec1.setIndicator("HOME");
+        spec1.setIndicator("Trang chủ");
         myTabHost.addTab(spec1);
 
         spec2 = myTabHost.newTabSpec("schedule");
         spec2.setContent(R.id.tab2);
-        spec2.setIndicator("SCHEDULE");
+        spec2.setIndicator("Lịch tưới");
         myTabHost.addTab(spec2);
 
         spec3 = myTabHost.newTabSpec("statistic");
         spec3.setContent(R.id.tab3);
-        spec3.setIndicator("STATISTIC");
+        spec3.setIndicator("Lịch sử");
         myTabHost.addTab(spec3);
 
         SharedPreferences keyPreferences = getSharedPreferences("adafruitKey", MODE_PRIVATE);
@@ -194,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 sendDataMQTT("tienngo/feeds/scheduler1",schedule1.toString());
-                checkSendData(schedule1, oldSchedule, btnActive1);
+                checkSendData(schedule1, oldSchedule, btnActive1, null);
             }
         });
 
@@ -210,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 sendDataMQTT("tienngo/feeds/scheduler2",schedule2.toString());
-                checkSendData(schedule2, oldSchedule, btnActive2);
+                checkSendData(schedule2, oldSchedule, btnActive2, null);
             }
         });
 
@@ -226,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 sendDataMQTT("tienngo/feeds/scheduler3",schedule3.toString());
-                checkSendData(schedule3, oldSchedule, btnActive3);
+                checkSendData(schedule3, oldSchedule, btnActive3, null);
             }
         });
 
@@ -251,9 +268,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 JSONObject oldSchedule = null;
                 int area;
-                if(String.valueOf(edtSched1Cycle.getEditableText()).equals("1")) area = 0;
-                else if(String.valueOf(edtSched1Cycle.getEditableText()).equals("2")) area = 1;
-                else if(String.valueOf(edtSched1Cycle.getEditableText()).equals("3")) area = 2;
+                if(String.valueOf(edtSched1Area.getEditableText()).equals("1")) area = 0;
+                else if(String.valueOf(edtSched1Area.getEditableText()).equals("2")) area = 1;
+                else if(String.valueOf(edtSched1Area.getEditableText()).equals("3")) area = 2;
                 else area = -1;
                 try {
                     oldSchedule = new JSONObject(schedule1.toString());
@@ -270,11 +287,69 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 sendDataMQTT("tienngo/feeds/scheduler1",schedule1.toString());
-                checkSendData(schedule1, oldSchedule, btnActive1);
-                btnSchedule1.setEnabled(false);
+                checkSendData(schedule1, oldSchedule, null, btnSchedule1);
 //                Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnSchedule2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject oldSchedule = null;
+                int area;
+                if(String.valueOf(edtSched2Area.getEditableText()).equals("1")) area = 0;
+                else if(String.valueOf(edtSched2Area.getEditableText()).equals("2")) area = 1;
+                else if(String.valueOf(edtSched2Area.getEditableText()).equals("3")) area = 2;
+                else area = -1;
+                try {
+                    oldSchedule = new JSONObject(schedule2.toString());
+                    // Add key-value pairs to the JSON object
+                    schedule2.put("cycle", Integer.valueOf(String.valueOf(edtSched2Cycle.getEditableText())));
+                    schedule2.put("flow1", Integer.valueOf(String.valueOf(edtSched2Mix1.getEditableText())));
+                    schedule2.put("flow2", Integer.valueOf(String.valueOf(edtSched2Mix2.getEditableText())));
+                    schedule2.put("flow3", Integer.valueOf(String.valueOf(edtSched2Mix3.getEditableText())));
+                    schedule2.put("area", area);
+                    schedule2.put("isActive", btnSched2Active.isOn());
+                    schedule2.put("startTime", String.valueOf(edtSched2Start.getEditableText()));
+                    schedule2.put("stopTime", String.valueOf(edtSched2Stop.getEditableText()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sendDataMQTT("tienngo/feeds/scheduler2",schedule2.toString());
+                checkSendData(schedule2, oldSchedule, null, btnSchedule2);
+//                Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnSchedule3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject oldSchedule = null;
+                int area;
+                if(String.valueOf(edtSched3Area.getEditableText()).equals("1")) area = 0;
+                else if(String.valueOf(edtSched3Area.getEditableText()).equals("2")) area = 1;
+                else if(String.valueOf(edtSched3Area.getEditableText()).equals("3")) area = 2;
+                else area = -1;
+                try {
+                    oldSchedule = new JSONObject(schedule3.toString());
+                    // Add key-value pairs to the JSON object
+                    schedule3.put("cycle", Integer.valueOf(String.valueOf(edtSched3Cycle.getEditableText())));
+                    schedule3.put("flow1", Integer.valueOf(String.valueOf(edtSched3Mix1.getEditableText())));
+                    schedule3.put("flow2", Integer.valueOf(String.valueOf(edtSched3Mix2.getEditableText())));
+                    schedule3.put("flow3", Integer.valueOf(String.valueOf(edtSched3Mix3.getEditableText())));
+                    schedule3.put("area", area);
+                    schedule3.put("isActive", btnSched3Active.isOn());
+                    schedule3.put("startTime", String.valueOf(edtSched3Start.getEditableText()));
+                    schedule3.put("stopTime", String.valueOf(edtSched3Stop.getEditableText()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sendDataMQTT("tienngo/feeds/scheduler3",schedule3.toString());
+                checkSendData(schedule3, oldSchedule, null, btnSchedule3);
+//                Toast.makeText(MainActivity.this, "HELLO", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         Intent getNewKey = getIntent();
         String newKey = getNewKey.getStringExtra("newKey");
@@ -282,6 +357,38 @@ public class MainActivity extends AppCompatActivity {
             Log.d("TEST", "setPassword!");
             password = newKey;
         }
+
+//        lineChart = findViewById(R.id.lineChart);
+//
+//// Tạo dữ liệu cho biểu đồ
+//        ArrayList<Entry> entries = new ArrayList<>();
+//        for (int i = 0; i < 100; i++) {
+//            entries.add(new Entry(i, (float) (Math.random() * 100)));
+//        }
+//
+//        LineDataSet dataSet = new LineDataSet(entries, "Label");
+//        dataSet.setColor(Color.BLUE);
+//        dataSet.setValueTextColor(Color.BLACK);
+//
+//        LineData lineData = new LineData(dataSet);
+//        lineChart.setData(lineData);
+//
+//        // Cho phép cuộn và thu phóng
+//        lineChart.setDragEnabled(true);
+//        lineChart.setScaleEnabled(true);
+//        lineChart.setPinchZoom(true);
+//
+//        // Cấu hình trục X
+//        XAxis xAxis = lineChart.getXAxis();
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setGranularity(1f); // one hour
+//
+//        // Cấu hình trục Y
+//        YAxis yAxisLeft = lineChart.getAxisLeft();
+//        yAxisLeft.setGranularity(1f);
+//        lineChart.getAxisRight().setEnabled(false);
+//
+//        lineChart.invalidate();
 
         startMQTT();
 
@@ -354,6 +461,27 @@ public class MainActivity extends AppCompatActivity {
                     check = message.toString();
                     notifyDataUpdated();
                 }
+                else if(topic.contains("scheduler1")){
+                    schedule1 = new JSONObject(message.toString());
+                    String startTime = schedule1.getString("startTime");
+                    txtCycle1.setText(startTime);
+                    Boolean isActive = schedule1.getBoolean("isActive");
+                    btnActive1.setOn(isActive);
+                }
+                else if(topic.contains("scheduler2")){
+                    schedule2 = new JSONObject(message.toString());
+                    String startTime = schedule2.getString("startTime");
+                    txtCycle2.setText(startTime);
+                    Boolean isActive = schedule2.getBoolean("isActive");
+                    btnActive2.setOn(isActive);
+                }
+                else if(topic.contains("scheduler3")){
+                    schedule3 = new JSONObject(message.toString());
+                    String startTime = schedule3.getString("startTime");
+                    txtCycle3.setText(startTime);
+                    Boolean isActive = schedule3.getBoolean("isActive");
+                    btnActive3.setOn(isActive);
+                }
             }
 
             @Override
@@ -365,11 +493,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showErrorMessage(String message) {
-        LinearLayout errorContainer = findViewById(R.id.errorContainer);
-        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
+//        LinearLayout errorContainer = findViewById(R.id.errorContainer);
+//        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
+//
+//        textErrorMessage.setText(message);
+//        errorContainer.setVisibility(View.VISIBLE);
 
-        textErrorMessage.setText(message);
-        errorContainer.setVisibility(View.VISIBLE);
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
     private void hideErrorMessage() {
@@ -380,12 +510,15 @@ public class MainActivity extends AppCompatActivity {
 
     private final Object lock = new Object();
 
-    public void checkSendData(JSONObject dataCheck, JSONObject oldData,LabeledSwitch btnDevice) {
+    public void checkSendData(JSONObject dataCheck, JSONObject oldData, LabeledSwitch btnDevice, Button btnSchedule) {
         final long TIMEOUT = 5000; // Thời gian chờ tối đa là 5 giây
         final long startTime = System.currentTimeMillis();
 
-        btnDevice.setEnabled(false);
-        showErrorMessage("Đang gửi dữ liệu ");
+        runOnUiThread(() -> {
+            if(btnDevice != null) btnDevice.setEnabled(false);
+            if(btnSchedule != null) btnSchedule.setEnabled(false);
+            showErrorMessage("Đang gửi dữ liệu ");
+        });
         new Thread(() -> {
             synchronized (lock) {
                 while (!check.equals(dataCheck.toString()) && System.currentTimeMillis() - startTime < TIMEOUT) {
@@ -408,7 +541,6 @@ public class MainActivity extends AppCompatActivity {
 //                        dataCheck.put("schedulerName", oldData.get("schedulerName"));
                         dataCheck.put("startTime", oldData.getString("startTime"));
                         dataCheck.put("stopTime", oldData.getString("stopTime"));
-                        btnDevice.setOn(oldData.getBoolean("isActive"));
 
                         if(dataCheck.getString("schedulerName").equals("LỊCH TƯỚI 1")) {
                             sendDataMQTT("tienngo/feeds/scheduler1", dataCheck.toString());
@@ -419,6 +551,15 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             sendDataMQTT("tienngo/feeds/scheduler3",dataCheck.toString());
                         }
+                        runOnUiThread(() -> {
+                            if(btnDevice != null) {
+                                try {
+                                    btnDevice.setOn(oldData.getBoolean("isActive"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -442,15 +583,22 @@ public class MainActivity extends AppCompatActivity {
                     txtAvgTime.setText(String.format("Thời gian gửi nhận trung bình: %dms", totalTime/countTimes));
                     txtCountTimes.setText(String.format("Số lần gửi thành công: %d", countTimes));
 
-                    runOnUiThread(() -> showErrorMessage(String.format("%dms ", checkTime)));
-                    try {
-                        btnDevice.setOn(dataCheck.getBoolean("isActive"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    runOnUiThread(() -> {
+                        showErrorMessage(String.format("%dms ", checkTime));
+                        if(btnDevice != null) {
+                            try {
+                                btnDevice.setOn(dataCheck.getBoolean("isActive"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
-            btnDevice.setEnabled(true);
+            runOnUiThread(() -> {
+                if(btnDevice != null) btnDevice.setEnabled(true);
+                if(btnSchedule != null) btnSchedule.setEnabled(true);
+            });
         }).start();
     }
 
@@ -460,7 +608,6 @@ public class MainActivity extends AppCompatActivity {
             lock.notify(); // Kích thích luồng đang chờ
         }
     }
-
 
     private void setDataFromAPIs() {
             new FetchDataAsyncTask(this).execute(API_FEED_URLS);
@@ -537,7 +684,11 @@ public class MainActivity extends AppCompatActivity {
                         activity.edtSched1Mix3.setText(activity.schedule1.getString("flow3"));
                         activity.edtSched1Start.setText(activity.schedule1.getString("startTime"));
                         activity.edtSched1Stop.setText(activity.schedule1.getString("stopTime"));
-                        activity.edtSched1Area.setText(activity.schedule1.getString("area"));
+                        int area = activity.schedule1.getInt("area");
+                        if(area == 0) activity.edtSched1Area.setText("1");
+                        else if(area == 1) activity.edtSched1Area.setText("2");
+                        else if(area == 1) activity.edtSched1Area.setText("3");
+                        else activity.edtSched1Area.setText("Tất cả");
                         activity.btnSched1Active.setOn(isActive);
                     }
                     else if (nameFeed.equals("scheduler2")) {
@@ -553,7 +704,11 @@ public class MainActivity extends AppCompatActivity {
                         activity.edtSched2Mix3.setText(activity.schedule2.getString("flow3"));
                         activity.edtSched2Start.setText(activity.schedule2.getString("startTime"));
                         activity.edtSched2Stop.setText(activity.schedule2.getString("stopTime"));
-                        activity.edtSched2Area.setText(activity.schedule2.getString("area"));
+                        int area = activity.schedule2.getInt("area");
+                        if(area == 0) activity.edtSched2Area.setText("1");
+                        else if(area == 1) activity.edtSched2Area.setText("2");
+                        else if(area == 1) activity.edtSched2Area.setText("3");
+                        else activity.edtSched2Area.setText("Tất cả");
                         activity.btnSched2Active.setOn(isActive);
                     }
                     else if (nameFeed.equals("scheduler3")) {
@@ -569,7 +724,11 @@ public class MainActivity extends AppCompatActivity {
                         activity.edtSched3Mix3.setText(activity.schedule3.getString("flow3"));
                         activity.edtSched3Start.setText(activity.schedule3.getString("startTime"));
                         activity.edtSched3Stop.setText(activity.schedule3.getString("stopTime"));
-                        activity.edtSched3Area.setText(activity.schedule3.getString("area"));
+                        int area = activity.schedule3.getInt("area");
+                        if(area == 0) activity.edtSched3Area.setText("1");
+                        else if(area == 1) activity.edtSched3Area.setText("2");
+                        else if(area == 1) activity.edtSched3Area.setText("3");
+                        else activity.edtSched3Area.setText("Tất cả");
                         activity.btnSched3Active.setOn(isActive);
                     }
                 } catch (JSONException e) {
@@ -688,6 +847,8 @@ public class MainActivity extends AppCompatActivity {
         }
         txtCountTimes.setText(String.format("Số lần gửi thành công: %d", countTimes));
     }
+
+
 
 
 }

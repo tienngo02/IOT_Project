@@ -4,5 +4,5 @@
     <stroke
         android:width="2dp"
     android:color="#000000"/> <!-- Border color, change as needed -->
-    <corners android:radius="4dp"/> <!-- Border corner radius, optional -->
+    <corners android:radius="10dp"/> <!-- Border corner radius, optional -->
 </shape>

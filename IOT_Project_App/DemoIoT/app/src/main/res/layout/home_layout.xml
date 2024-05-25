@@ -144,7 +144,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:text="Chưa khởi động"
+                android:text="Đã kết thúc"
                 android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -214,7 +214,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:text="Chưa khởi động"
+                android:text="Đã kết thúc"
                 android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="bold" />
@@ -285,7 +285,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:text="Chưa khởi động"
+                android:text="Đã kết thúc"
                 android:textColor="#000000"
                 android:textSize="20dp"
                 android:textStyle="bold" />

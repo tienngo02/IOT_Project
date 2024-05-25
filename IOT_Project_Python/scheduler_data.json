@@ -1,14 +1,14 @@
 [
     {
-        "cycle": 5,
+        "cycle": 3,
         "flow1": 20,
         "flow2": 10,
         "flow3": 20,
-        "area": 0,
+        "area": -1,
         "isActive": true,
         "schedulerName": "L\u1ecaCH T\u01af\u1edaI 1",
-        "startTime": "19:30",
-        "stopTime": "18:40"
+        "startTime": "16:30",
+        "stopTime": "16:40"
     },
     {
         "cycle": 5,
@@ -19,7 +19,7 @@
         "isActive": false,
         "schedulerName": "L\u1ecaCH T\u01af\u1edaI 2",
         "startTime": "19:30",
-        "stopTime": "18:40"
+        "stopTime": "19:40"
     },
     {
         "cycle": 5,

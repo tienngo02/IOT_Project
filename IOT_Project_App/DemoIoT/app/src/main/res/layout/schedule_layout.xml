@@ -9,12 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="30"
+
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:orientation="horizontal">
 
             <TextView
@@ -27,14 +28,17 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <ImageButton
+
+            <Button
                 android:id="@+id/btnSchedule1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="8"
-                android:background="#ffffff"
-                android:src="@drawable/ic_baseline_check_24" />
+                android:layout_weight="9"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textSize="10dp"
+                android:text="Lưu" />
 
         </LinearLayout>
 
@@ -50,8 +54,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,10 +89,29 @@
                         android:textColor="#000000"
                         android:textSize="15dp"/>
 
+<!--                    <TextView-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"/>-->
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"/>
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Chọn vườn tưới:"
+                        android:textColor="#000000"
+                        android:textSize="15dp"/>
+
+                    <EditText
+                        android:id="@+id/edtSched1Area"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:ems="10"
+                        android:hint="1, 2, 3, tất cả"
+                        android:textSize="14dp"
+                        android:inputType="text" />
 
                 </LinearLayout>
 
@@ -186,37 +207,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:text="Chọn vườn tưới:"
-                        android:textColor="#000000"
-                        android:textSize="15dp"/>
-
-                    <EditText
-                        android:id="@+id/edtSched1Area"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:ems="10"
-                        android:hint="1, 2, 3, tất cả"
-                        android:textSize="14dp"
-                        android:inputType="text" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-
 
             </LinearLayout>
 
@@ -242,13 +232,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="30"
-        android:layout_marginTop="12dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:orientation="horizontal">
 
             <TextView
@@ -261,14 +250,25 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <ImageButton
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnSchedule2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_weight="8"-->
+<!--                android:background="#ffffff"-->
+<!--                android:src="@drawable/ic_baseline_check_24" />-->
+
+            <Button
                 android:id="@+id/btnSchedule2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="8"
-                android:background="#ffffff"
-                android:src="@drawable/ic_baseline_check_24" />
+                android:layout_weight="9"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textSize="10dp"
+                android:text="Lưu" />
 
         </LinearLayout>
 
@@ -322,7 +322,21 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"/>
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Chọn vườn tưới:"
+                        android:textColor="#000000"
+                        android:textSize="15dp"/>
+
+                    <EditText
+                        android:id="@+id/edtSched2Area"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:ems="10"
+                        android:hint="1, 2, 3, tất cả"
+                        android:textSize="14dp"
+                        android:inputType="text" />
 
                 </LinearLayout>
 
@@ -418,37 +432,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:text="Chọn vườn tưới:"
-                        android:textColor="#000000"
-                        android:textSize="15dp"/>
-
-                    <EditText
-                        android:id="@+id/edtSched2Area"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:ems="10"
-                        android:hint="1, 2, 3, tất cả"
-                        android:textSize="14dp"
-                        android:inputType="text" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"/>
-                </LinearLayout>
-
 
             </LinearLayout>
 
@@ -474,13 +457,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="30"
-        android:layout_marginTop="12dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:orientation="horizontal">
 
             <TextView
@@ -493,14 +475,25 @@
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
-            <ImageButton
+<!--            <ImageButton-->
+<!--                android:id="@+id/btnSchedule3"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_weight="8"-->
+<!--                android:background="#ffffff"-->
+<!--                android:src="@drawable/ic_baseline_check_24" />-->
+
+            <Button
                 android:id="@+id/btnSchedule3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="8"
-                android:background="#ffffff"
-                android:src="@drawable/ic_baseline_check_24" />
+                android:layout_weight="9"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textSize="10dp"
+                android:text="Lưu" />
 
         </LinearLayout>
 
@@ -554,7 +547,21 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"/>
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Chọn vườn tưới:"
+                        android:textColor="#000000"
+                        android:textSize="15dp"/>
+
+                    <EditText
+                        android:id="@+id/edtSched3Area"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:ems="10"
+                        android:hint="1, 2, 3, tất cả"
+                        android:textSize="14dp"
+                        android:inputType="text" />
 
                 </LinearLayout>
 
@@ -648,37 +655,6 @@
                         android:textSize="14dp"
                         android:inputType="text" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:text="Chọn vườn tưới:"
-                        android:textColor="#000000"
-                        android:textSize="15dp"/>
-
-                    <EditText
-                        android:id="@+id/edtSched3Area"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:ems="10"
-                        android:hint="1, 2, 3, tất cả"
-                        android:textSize="14dp"
-                        android:inputType="text" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"/>
                 </LinearLayout>
 
 
