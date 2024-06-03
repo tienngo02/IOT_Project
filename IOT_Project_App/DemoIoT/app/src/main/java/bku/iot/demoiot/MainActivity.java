@@ -5,15 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,21 +41,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class Constants {
     public static final String IDLE = "0";
@@ -92,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     //statistic_layout
     TextView txtAvgTime, txtCountTimes;
-    private LineChart lineChart;
+    ImageView temperatureChart, humidityChart;
 
 
     TabHost myTabHost;
@@ -173,8 +163,9 @@ public class MainActivity extends AppCompatActivity {
 
         //statistic_layout
         txtAvgTime = findViewById(R.id.txtAvgTime);
-        txtCountTimes= findViewById(R.id.txtCountTimes);
-
+        txtCountTimes = findViewById(R.id.txtCountTimes);
+        temperatureChart = findViewById(R.id.temperatureChart);
+        humidityChart = findViewById(R.id.humidityChart);
 
         myTabHost = findViewById(R.id.tabHost);
         myTabHost.setup();
@@ -204,7 +195,10 @@ public class MainActivity extends AppCompatActivity {
         btnActive3.setEnabled(false);
 
         setDataFromAPIs();
-        setDataStatistic();
+
+        new Thread(() ->{
+            setDataStatistic();
+        }).start();
 
 
         btnActive1.setOnToggledListener(new OnToggledListener() {
@@ -418,38 +412,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("TEST", "setPassword!");
             password = newKey;
         }
-
-//        lineChart = findViewById(R.id.lineChart);
-//
-//// Tạo dữ liệu cho biểu đồ
-//        ArrayList<Entry> entries = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            entries.add(new Entry(i, (float) (Math.random() * 100)));
-//        }
-//
-//        LineDataSet dataSet = new LineDataSet(entries, "Label");
-//        dataSet.setColor(Color.BLUE);
-//        dataSet.setValueTextColor(Color.BLACK);
-//
-//        LineData lineData = new LineData(dataSet);
-//        lineChart.setData(lineData);
-//
-//        // Cho phép cuộn và thu phóng
-//        lineChart.setDragEnabled(true);
-//        lineChart.setScaleEnabled(true);
-//        lineChart.setPinchZoom(true);
-//
-//        // Cấu hình trục X
-//        XAxis xAxis = lineChart.getXAxis();
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setGranularity(1f); // one hour
-//
-//        // Cấu hình trục Y
-//        YAxis yAxisLeft = lineChart.getAxisLeft();
-//        yAxisLeft.setGranularity(1f);
-//        lineChart.getAxisRight().setEnabled(false);
-//
-//        lineChart.invalidate();
 
         startMQTT();
 
@@ -904,12 +866,49 @@ public class MainActivity extends AppCompatActivity {
         long countTimes = countTimesPreferences.getLong("count_times",0);
 
         if(countTimes != 0) {
-            txtAvgTime.setText(String.format("Thời gian gửi nhận trung bình: %dms", totalTime/countTimes));
+            txtAvgTime.setText(String.format("Thời gian gửi và xác nhận trung bình: %dms", totalTime/countTimes));
         }
         txtCountTimes.setText(String.format("Số lần gửi thành công: %d", countTimes));
+
+//        new Thread(() ->{
+//            fetchData("https://io.adafruit.com/api/v2/tienngo/feeds/temperature-chart", temperatureChart);
+////            fetchData("https://io.adafruit.com/api/v2/tienngo/feeds/humidity/data", humidityChart);
+//        }).start();
+
+        fetchData("https://io.adafruit.com/api/v2/tienngo/feeds/temperature-chart", temperatureChart);
+        fetchData("https://io.adafruit.com/api/v2/tienngo/feeds/humidity-chart", humidityChart);
+
     }
 
 
+    private static void fetchData(String urlString, ImageView imageView) {
+        StringBuilder result = new StringBuilder();
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            reader.close();
+            connection.disconnect();
+
+            JSONObject json = new JSONObject(result.toString());
+            String base64Image = json.getString("last_value");
+
+            // Giải mã chuỗi base64 thành bitmap
+            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+            // Hiển thị hình ảnh trong ImageView
+            imageView.setImageBitmap(decodedByte);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }

@@ -5,11 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2cf6dd4-5202-49b1-9763-f0e857f900f8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/java/bku/iot/demoiot/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/java/bku/iot/demoiot/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/drawable/border_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/drawable/border_background.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/schedule_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/schedule_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/statistic_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/statistic_layout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scheduler_data.json" beforeDir="false" afterPath="$PROJECT_DIR$/scheduler_data.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schedule_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/schedule_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +47,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Study/IOT_Application/IOT_Project/IOT_Project_Python&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Study/IOT_Application/IOT_Lab/LAB_MANUALS/pythonProject&quot;
   }
 }</component>
   <component name="SharedIndexes">

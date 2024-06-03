@@ -25,7 +25,7 @@ import schedule
 
 AIO_FEED_IDs = ["scheduler1", "scheduler2", "scheduler3"]
 AIO_USERNAME = "tienngo"
-AIO_KEY = "aio_crag45SIJwceJtWSksTyWqYR1oKC"
+AIO_KEY = ""
 JSONFILE = 'scheduler_data.json'
 FSM_TASK_TAG = 'fsm_task_tag'
 
@@ -109,6 +109,9 @@ def check_scheduler_time():
     current_time = time.localtime()
     current_hour = current_time.tm_hour
     current_minute = current_time.tm_min
+    #Change current_hour to GMT+7
+    current_hour = (current_hour + 6) % 24
+    print(current_hour, ":", current_minute)
 
     for idx in range(len(scheduler_list)):
         start_hour, start_minute = map(int, scheduler_list[idx].startTime.split(':'))
@@ -133,7 +136,7 @@ def check_scheduler_time():
                 is_running_list[idx] = False
 
 
-schedule.every(30).seconds.do(check_scheduler_time)
+schedule.every(10).seconds.do(check_scheduler_time)
 schedule.every(7).seconds.do(read_serial_sensor, client)
 
 while True:
