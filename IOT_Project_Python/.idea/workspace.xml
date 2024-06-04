@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2cf6dd4-5202-49b1-9763-f0e857f900f8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/java/bku/iot/demoiot/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/java/bku/iot/demoiot/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/drawable/ic_baseline_highlight_off_24.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/drawable/ic_baseline_highlight_off_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/activity_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/statistic_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../IOT_Project_App/DemoIoT/app/src/main/res/layout/statistic_layout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fsm_irrigation.py" beforeDir="false" afterPath="$PROJECT_DIR$/fsm_irrigation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rs485.py" beforeDir="false" afterPath="$PROJECT_DIR$/rs485.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
