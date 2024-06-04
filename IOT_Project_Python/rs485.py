@@ -151,19 +151,23 @@ sensor_type = 0
 def read_serial_sensor(client):
     global sensor_type
     if sensor_type == 0:
-        print("Temperature...")
-        temp = random.randint(20, 40)
+        # print("Temperature...")
+        # temp = random.randint(20, 40)
+
+        temp = readTemperature() / 100
+        print("Temperature: ", temp)
         client.publish("temperature", temp)
-        # client.publish("temperature", readTemperature() / 100)
         sensor_type = 1
     elif sensor_type == 1:
-        print("Humidity...")
-        humi = random.randint(50, 70)
+        # print("Humidity...")
+        # humi = random.randint(50, 70)
+
+        humi = readMoisture() / 100
+        print("Humidity: ", humi)
         client.publish("humidity", humi)
-        # client.publish("humidity", readMoisture() / 100)
         sensor_type = 2
     else:
-        print("Light...")
         light = random.randint(40, 70)
+        print("Light: ", light)
         client.publish("light", light)
         sensor_type = 0

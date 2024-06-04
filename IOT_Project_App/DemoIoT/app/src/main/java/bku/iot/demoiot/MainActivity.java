@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     JSONObject schedule2 = new JSONObject();
     JSONObject schedule3 = new JSONObject();
 
-    private String password = "aio_dAjN47GWlQwyiMtudpF1uVaiTS";
+    private String password = "";
 
     String[] API_FEED_URLS = {  "https://io.adafruit.com/api/v2/tienngo/feeds/humidity",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/temperature",
@@ -516,13 +516,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showErrorMessage(String message) {
-//        LinearLayout errorContainer = findViewById(R.id.errorContainer);
-//        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
-//
-//        textErrorMessage.setText(message);
-//        errorContainer.setVisibility(View.VISIBLE);
+        LinearLayout errorContainer = findViewById(R.id.errorContainer);
+        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
 
-        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+        textErrorMessage.setText(message);
+        errorContainer.setVisibility(View.VISIBLE);
+
+//        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
     private void hideErrorMessage() {

@@ -13,6 +13,8 @@ PUMP_OUT = 6
 NEXT_CYCLE = 7
 END = 8
 
+TIME_IRRIGATION = 10
+
 status = IDLE
 cycle = 0
 count = 0
@@ -33,27 +35,35 @@ def fsm_irrigation_run(irrigation_sched, client):
         count = irrigation_sched.flow1
         print("CYCLE: " + str(cycle))
         print("MIXER1")
+        setDeviceON(1)
         publish_notification(client, irrigation_sched.id)
     elif status == MIXER1:
         if count <= 0:
+            setDeviceOFF(1)
             count = irrigation_sched.flow2
             status = MIXER2
             print("MIXER2")
+            setDeviceON(2)
             publish_notification(client, irrigation_sched.id)
     elif status == MIXER2:
         if count <= 0:
+            setDeviceOFF(2)
             count = irrigation_sched.flow3
             status = MIXER3
             print("MIXER3")
+            setDeviceON(3)
             publish_notification(client, irrigation_sched.id)
     elif status == MIXER3:
         if count <= 0:
-            count = 20
+            setDeviceOFF(3)
+            count = TIME_IRRIGATION
             status = PUMP_IN
             print("PUMP_IN")
+            setDeviceON(7)
             publish_notification(client, irrigation_sched.id)
     elif status == PUMP_IN:
         if count <= 0:
+            setDeviceOFF(7)
             status = SELECTOR
             print("SELECTOR")
             if irrigation_sched.area == -1:
@@ -63,12 +73,14 @@ def fsm_irrigation_run(irrigation_sched, client):
                 area_selector(irrigation_sched.area)
                 publish_notification(client, irrigation_sched.id, str(irrigation_sched.area))
     elif status == SELECTOR:
-        count = 20
+        count = TIME_IRRIGATION
         status = PUMP_OUT
         print("PUMP_OUT")
+        setDeviceON(8)
         publish_notification(client, irrigation_sched.id)
     elif status == PUMP_OUT:
         if count <= 0:
+            setDeviceOFF(8)
             status = NEXT_CYCLE
             print("NEXT_CYCLE")
             publish_notification(client, irrigation_sched.id)
@@ -86,6 +98,7 @@ def fsm_irrigation_run(irrigation_sched, client):
             count = irrigation_sched.flow1
             print("CYCLE: " + str(cycle))
             print("MIXER1")
+            setDeviceON(1)
             publish_notification(client, irrigation_sched.id)
 
     count -= 1
@@ -93,11 +106,20 @@ def fsm_irrigation_run(irrigation_sched, client):
 
 def area_selector(area):
     if area == 0:
-        print('area0')
+        print('AREA0')
+        setDeviceON(4)
+        setDeviceOFF(5)
+        setDeviceOFF(6)
     elif area == 1:
-        print('area1')
+        print('AREA1')
+        setDeviceOFF(4)
+        setDeviceON(5)
+        setDeviceOFF(6)
     elif area == 2:
-        print('area2')
+        print('AREA2')
+        setDeviceOFF(4)
+        setDeviceOFF(5)
+        setDeviceON(6)
 
 
 def publish_notification(client, id, extra=''):
