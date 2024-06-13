@@ -5,67 +5,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background_app2"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/errorContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:layout_margin="5dp"
-        android:background="@drawable/red_border_background"
-        android:padding="10dp">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/errorContainer"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:background="@drawable/red_border_background"-->
+<!--        android:padding="10dp">-->
 
-        <TextView
-            android:id="@+id/textErrorMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đã xảy ra lỗi! "
+<!--        <TextView-->
+<!--            android:id="@+id/textErrorMessage"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Đã xảy ra lỗi! "-->
 
-            android:textColor="#000000" />
+<!--            android:textColor="#000000" />-->
 
-        <ImageButton
-            android:id="@+id/btnError"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:src="@drawable/ic_baseline_highlight_off_24" />
-    </LinearLayout>
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnError"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@color/white"-->
+<!--            android:src="@drawable/ic_baseline_highlight_off_24" />-->
+<!--    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="#ffffff"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_margin="3dp"
+            android:layout_weight="2"
+            android:layout_margin="5dp"
             android:src="@drawable/logo"></ImageView>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="14"
             android:gravity="center"
-            android:text="IOT DEMO"
-            android:textColor="#1E90FF"
-            android:textSize="30dp"
+            android:text="SMART IRRIGATION"
+            android:textColor="#1BCC0E"
+            android:textSize="25dp"
             android:textStyle="bold"></TextView>
 
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="#ffffff"
-            android:src="@drawable/setting_icon" />
+            android:layout_margin="5dp"
+            android:src="@drawable/ic_baseline_settings_24" />
 
     </LinearLayout>
 
@@ -73,7 +77,7 @@
         android:id="@+id/tabHost"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9">
+        android:layout_weight="10">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-                    <include layout="@layout/home_layout"/>
+                    <include layout="@layout/home_layout" />
 
                 </LinearLayout>
 
@@ -116,6 +120,8 @@
 
             <TabWidget
                 android:id="@android:id/tabs"
+                android:background="#ffffff"
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

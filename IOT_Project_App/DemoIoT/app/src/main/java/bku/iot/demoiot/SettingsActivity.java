@@ -1,36 +1,24 @@
 package bku.iot.demoiot;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import android.widget.Toast;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-
-import java.util.Map;
-import java.util.Set;
 
 
 public class SettingsActivity extends AppCompatActivity {
 
-    ImageButton btnBack, btnGetKey, btnErrorSettings;
+    ImageButton btnBack, btnGetKey;
     EditText edtKey;
     String newKey;
+    Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
         btnGetKey = findViewById(R.id.btnGetKey);
         edtKey = findViewById(R.id.edtKey);
-        btnErrorSettings = findViewById(R.id.btnErrorSettings);
+//        btnErrorSettings = findViewById(R.id.btnErrorSettings);
 
 
         btnGetKey.setOnClickListener(new View.OnClickListener() {
@@ -65,12 +53,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         });
 
-        btnErrorSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideErrorMessage();
-            }
-        });
+//        btnErrorSettings.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                hideErrorMessage();
+//            }
+//        });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,16 +69,24 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showErrorMessage(String message) {
-        LinearLayout errorContainer = findViewById(R.id.errorContainerSettings);
-        TextView textErrorMessage = findViewById(R.id.textErrorMessageSettings);
+//        LinearLayout errorContainer = findViewById(R.id.errorContainerSettings);
+//        TextView textErrorMessage = findViewById(R.id.textErrorMessageSettings);
+//
+//        textErrorMessage.setText(message);
+//        errorContainer.setVisibility(View.VISIBLE);
 
-        textErrorMessage.setText(message);
-        errorContainer.setVisibility(View.VISIBLE);
+        toast = Toast.makeText(SettingsActivity.this, message, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void hideErrorMessage() {
-        LinearLayout errorContainer = findViewById(R.id.errorContainerSettings);
-        errorContainer.setVisibility(View.GONE);
+//        LinearLayout errorContainer = findViewById(R.id.errorContainerSettings);
+//        errorContainer.setVisibility(View.GONE);
+
+        if (toast != null) {
+            toast.cancel();
+            toast = null;  // Đặt lại biến toast về null sau khi hủy
+        }
     }
 
 

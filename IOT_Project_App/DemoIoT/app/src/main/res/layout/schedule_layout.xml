@@ -40,8 +40,8 @@
             android:layout_gravity="center"
             android:layout_weight="7"
             android:layout_marginLeft="3dp"
-            android:layout_marginRight="8dp"
-            android:textSize="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="9dp"
             android:text="Lưu" />
 
     </LinearLayout>
@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:visibility="gone"
+        android:background="@drawable/red_border_background"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -73,6 +74,7 @@
                     android:gravity="center"
                     android:text="Số vòng:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -83,6 +85,7 @@
                     android:ems="10"
                     android:hint=""
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <TextView
@@ -92,6 +95,7 @@
                     android:gravity="center_vertical"
                     android:text="vòng"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <!--                    <TextView-->
@@ -106,6 +110,7 @@
                     android:gravity="center"
                     android:text="Chọn vườn tưới:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -116,6 +121,7 @@
                     android:ems="10"
                     android:hint="1, 2, 3, tất cả"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
             </LinearLayout>
@@ -133,6 +139,7 @@
                     android:gravity="center"
                     android:text="Máy trộn:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -143,6 +150,7 @@
                     android:ems="10"
                     android:hint="1"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <EditText
@@ -153,6 +161,7 @@
                     android:ems="10"
                     android:hint="2"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <EditText
@@ -163,6 +172,7 @@
                     android:ems="10"
                     android:hint="3"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
             </LinearLayout>
 
@@ -179,6 +189,7 @@
                     android:gravity="center"
                     android:text="Bắt đầu từ:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -189,6 +200,7 @@
                     android:ems="10"
                     android:hint="00:00"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <TextView
@@ -198,6 +210,7 @@
                     android:gravity="center"
                     android:text="đến"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -208,6 +221,7 @@
                     android:ems="10"
                     android:hint="00:00"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
             </LinearLayout>
@@ -266,8 +280,8 @@
             android:layout_gravity="center"
             android:layout_weight="7"
             android:layout_marginLeft="3dp"
-            android:layout_marginRight="8dp"
-            android:textSize="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="9dp"
             android:text="Lưu" />
 
     </LinearLayout>
@@ -278,6 +292,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:visibility="gone"
+        android:background="@drawable/red_border_background"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -299,6 +314,7 @@
                     android:gravity="center"
                     android:text="Số vòng:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -309,6 +325,7 @@
                     android:ems="10"
                     android:hint=""
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <TextView
@@ -318,6 +335,7 @@
                     android:gravity="center_vertical"
                     android:text="vòng"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <TextView
@@ -327,6 +345,7 @@
                     android:gravity="center"
                     android:text="Chọn vườn tưới:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -337,6 +356,7 @@
                     android:ems="10"
                     android:hint="1, 2, 3, tất cả"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
             </LinearLayout>
@@ -354,6 +374,7 @@
                     android:gravity="center"
                     android:text="Máy trộn:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -364,6 +385,7 @@
                     android:ems="10"
                     android:hint="1"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <EditText
@@ -374,6 +396,7 @@
                     android:ems="10"
                     android:hint="2"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <EditText
@@ -384,6 +407,7 @@
                     android:ems="10"
                     android:hint="3"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
             </LinearLayout>
 
@@ -400,6 +424,7 @@
                     android:gravity="center"
                     android:text="Bắt đầu từ:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -410,6 +435,7 @@
                     android:ems="10"
                     android:hint="00:00"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <TextView
@@ -419,6 +445,7 @@
                     android:gravity="center"
                     android:text="đến"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -429,6 +456,7 @@
                     android:ems="10"
                     android:hint="00:00"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
             </LinearLayout>
@@ -487,8 +515,8 @@
             android:layout_gravity="center"
             android:layout_weight="7"
             android:layout_marginLeft="3dp"
-            android:layout_marginRight="8dp"
-            android:textSize="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="9dp"
             android:text="Lưu" />
 
     </LinearLayout>
@@ -499,6 +527,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:visibility="gone"
+        android:background="@drawable/red_border_background"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -520,6 +549,7 @@
                     android:gravity="center"
                     android:text="Số vòng:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -530,6 +560,7 @@
                     android:ems="10"
                     android:hint=""
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <TextView
@@ -539,6 +570,7 @@
                     android:gravity="center_vertical"
                     android:text="vòng"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <TextView
@@ -548,6 +580,7 @@
                     android:gravity="center"
                     android:text="Chọn vườn tưới:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -558,6 +591,7 @@
                     android:ems="10"
                     android:hint="1, 2, 3, tất cả"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
             </LinearLayout>
@@ -575,6 +609,7 @@
                     android:gravity="center"
                     android:text="Máy trộn:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -585,6 +620,7 @@
                     android:ems="10"
                     android:hint="1"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <EditText
@@ -595,6 +631,7 @@
                     android:ems="10"
                     android:hint="2"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <EditText
@@ -605,6 +642,7 @@
                     android:ems="10"
                     android:hint="3"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
             </LinearLayout>
 
@@ -621,6 +659,7 @@
                     android:gravity="center"
                     android:text="Bắt đầu từ:"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -631,6 +670,7 @@
                     android:ems="10"
                     android:hint="00:00"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
                 <TextView
@@ -640,6 +680,7 @@
                     android:gravity="center"
                     android:text="đến"
                     android:textColor="#000000"
+                    android:textStyle="bold"
                     android:textSize="15dp"/>
 
                 <EditText
@@ -650,6 +691,7 @@
                     android:ems="10"
                     android:hint="00:00"
                     android:textSize="14dp"
+                    android:textStyle="bold"
                     android:inputType="text" />
 
             </LinearLayout>

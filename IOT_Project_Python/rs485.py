@@ -84,6 +84,8 @@ def setDeviceON(id):
         ser.write(addModbusCrc(relay7_ON))
     elif id == 8:
         ser.write(addModbusCrc(relay8_ON))
+    time.sleep(1)
+    print(serial_read_data(ser))
 
 
 def setDeviceOFF(id):
@@ -103,6 +105,8 @@ def setDeviceOFF(id):
         ser.write(addModbusCrc(relay7_OFF))
     elif id == 8:
         ser.write(addModbusCrc(relay8_OFF))
+    time.sleep(1)
+    print(serial_read_data(ser))
 
 
 def serial_read_data(ser):
@@ -149,9 +153,9 @@ def writeData(id, state):
 
 sensor_type = 0
 def read_serial_sensor(client):
+    print("====================")
     global sensor_type
     if sensor_type == 0:
-        # print("Temperature...")
         # temp = random.randint(20, 40)
 
         temp = readTemperature() / 100
@@ -159,7 +163,6 @@ def read_serial_sensor(client):
         client.publish("temperature", temp)
         sensor_type = 1
     elif sensor_type == 1:
-        # print("Humidity...")
         # humi = random.randint(50, 70)
 
         humi = readMoisture() / 100
@@ -171,3 +174,4 @@ def read_serial_sensor(client):
         print("Light: ", light)
         client.publish("light", light)
         sensor_type = 0
+    print("====================")

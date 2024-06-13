@@ -3,6 +3,7 @@ from time import struct_time
 from Adafruit_IO import MQTTClient
 import time
 from fsm_irrigation import *
+# import fsm_irrigation as fsm
 import json
 import schedule
 
@@ -62,6 +63,7 @@ def message(client, feed_id, payload):
         scheduler_list[2].print_data()
 
     client.publish("check", payload)
+    print("Send response to server")
 
 
 client = MQTTClient(AIO_USERNAME, AIO_KEY)
@@ -111,7 +113,6 @@ def check_scheduler_time():
     current_minute = current_time.tm_min
     #Change current_hour to GMT+7
     current_hour = (current_hour + 6) % 24
-    print(current_hour, ":", current_minute)
 
     for idx in range(len(scheduler_list)):
         start_hour, start_minute = map(int, scheduler_list[idx].startTime.split(':'))
@@ -129,9 +130,6 @@ def check_scheduler_time():
         if current_hour == stop_hour and current_minute == stop_minute:
             if is_running_list[idx]:
                 print(f"Scheduler '{scheduler_list[idx].schedulerName}' is stop now.")
-                global cycle, status
-                status = IDLE
-                cycle = 0
                 schedule.clear(FSM_TASK_TAG)
                 is_running_list[idx] = False
 

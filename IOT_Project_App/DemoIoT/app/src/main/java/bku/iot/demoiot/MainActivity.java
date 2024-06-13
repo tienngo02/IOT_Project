@@ -33,7 +33,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,6 +40,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 class Constants {
@@ -59,13 +60,14 @@ class Constants {
 public class MainActivity extends AppCompatActivity {
 
     MQTTHelper mqttHelper;
+    Toast toast;
 
     //home_layout
     TextView txtTemp, txtLig, txtHumi;
     TextView txtCycle1, txtCycle2, txtCycle3;
     TextView txtStatus1, txtStatus2, txtStatus3;
     LabeledSwitch btnActive1, btnActive2, btnActive3;
-    ImageButton btnSettings, btnError;
+    ImageButton btnSettings;
 
     //schedule_layout
     ImageButton btnSched1Show, btnSched2Show, btnSched3Show;
@@ -93,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
 
     private String password = "";
 
-    String[] API_FEED_URLS = {  "https://io.adafruit.com/api/v2/tienngo/feeds/humidity",
-                                "https://io.adafruit.com/api/v2/tienngo/feeds/temperature",
-                                "https://io.adafruit.com/api/v2/tienngo/feeds/light",
-                                "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler1",
+    String[] API_FEED_URLS = {  "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler1",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler2",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/scheduler3",
+                                "https://io.adafruit.com/api/v2/tienngo/feeds/humidity",
+                                "https://io.adafruit.com/api/v2/tienngo/feeds/temperature",
+                                "https://io.adafruit.com/api/v2/tienngo/feeds/light",
                                 "https://io.adafruit.com/api/v2/tienngo/feeds/notification"};
 
 
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         txtStatus3 = findViewById(R.id.txtStatus3);
 
         btnSettings = findViewById(R.id.btnSettings);
-        btnError = findViewById(R.id.btnError);
+//        btnError = findViewById(R.id.btnError);
 
         //schedule_layout
         btnSched1Show = findViewById(R.id.btnSched1Show);
@@ -173,17 +175,17 @@ public class MainActivity extends AppCompatActivity {
 
         spec1 = myTabHost.newTabSpec("home");
         spec1.setContent(R.id.tab1);
-        spec1.setIndicator("Trang chủ");
+        spec1.setIndicator("",getResources().getDrawable(R.drawable.ic_baseline_home_24));
         myTabHost.addTab(spec1);
 
         spec2 = myTabHost.newTabSpec("schedule");
         spec2.setContent(R.id.tab2);
-        spec2.setIndicator("Lịch tưới");
+        spec2.setIndicator("",getResources().getDrawable(R.drawable.ic_baseline_edit_calendar_24));
         myTabHost.addTab(spec2);
 
         spec3 = myTabHost.newTabSpec("statistic");
         spec3.setContent(R.id.tab3);
-        spec3.setIndicator("Lịch sử");
+        spec3.setIndicator("",getResources().getDrawable(R.drawable.ic_baseline_insert_chart_24));
         myTabHost.addTab(spec3);
 
         SharedPreferences keyPreferences = getSharedPreferences("adafruitKey", MODE_PRIVATE);
@@ -194,11 +196,21 @@ public class MainActivity extends AppCompatActivity {
         btnActive2.setEnabled(false);
         btnActive3.setEnabled(false);
 
-        setDataFromAPIs();
+//        setDataFromAPIs();
 
-        new Thread(() ->{
-            setDataStatistic();
-        }).start();
+//        new Thread(() ->{
+//            setDataFromAPIs();
+//        }).start();
+//
+//        new Thread(() ->{
+//            setDataStatistic();
+//        }).start();
+
+        // Use Executors for better thread management
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+
+        executorService.execute(this::setDataFromAPIs);
+        executorService.execute(this::setDataStatistic);
 
 
         btnActive1.setOnToggledListener(new OnToggledListener() {
@@ -263,12 +275,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnError.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideErrorMessage();
-            }
-        });
+//        btnError.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                hideErrorMessage();
+//            }
+//        });
 
         btnSchedule1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -413,7 +425,11 @@ public class MainActivity extends AppCompatActivity {
             password = newKey;
         }
 
-        startMQTT();
+        executorService.execute(this::startMQTT);
+
+//        new Thread(() ->{
+//            startMQTT();
+//        }).start();
 
 //        if(!mqttHelper.isConnect()){
 //            btnLED.setEnabled(false);
@@ -452,7 +468,8 @@ public class MainActivity extends AppCompatActivity {
                 btnActive1.setEnabled(true);
                 btnActive2.setEnabled(true);
                 btnActive3.setEnabled(true);
-                hideErrorMessage();
+//                hideErrorMessage();
+                showErrorMessage("Đã kết nối MQTT");
                 Log.d("TEST", "connectComplete!");
             }
 
@@ -461,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
                 btnActive1.setEnabled(false);
                 btnActive2.setEnabled(false);
                 btnActive3.setEnabled(false);
-                showErrorMessage("Mất kết nối MQTT ");
+                showErrorMessage("Mất kết nối MQTT");
                 Log.d("TEST", "connectionLost!");
             }
 
@@ -516,18 +533,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showErrorMessage(String message) {
-        LinearLayout errorContainer = findViewById(R.id.errorContainer);
-        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
+//        LinearLayout errorContainer = findViewById(R.id.errorContainer);
+//        TextView textErrorMessage = findViewById(R.id.textErrorMessage);
+//
+//        textErrorMessage.setText(message);
+//        errorContainer.setVisibility(View.VISIBLE);
 
-        textErrorMessage.setText(message);
-        errorContainer.setVisibility(View.VISIBLE);
-
-//        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+        toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void hideErrorMessage() {
-        LinearLayout errorContainer = findViewById(R.id.errorContainer);
-        errorContainer.setVisibility(View.GONE);
+//        LinearLayout errorContainer = findViewById(R.id.errorContainer);
+//        errorContainer.setVisibility(View.GONE);
+        if (toast != null) {
+            toast.cancel();
+            toast = null;  // Đặt lại biến toast về null sau khi hủy
+        }
     }
 
 
@@ -691,9 +713,6 @@ public class MainActivity extends AppCompatActivity {
                     else if (nameFeed.equals("humidity")) {
                         activity.txtHumi.setText(lastValue + "%");
                     }
-                    else if (nameFeed.equals("notification")) {
-                        activity.handleNotification(lastValue);
-                    }
                     else if (nameFeed.equals("scheduler1")) {
                         activity.schedule1 = new JSONObject(lastValue);
                         String startTime = activity.schedule1.getString("startTime");
@@ -754,6 +773,9 @@ public class MainActivity extends AppCompatActivity {
                         else activity.edtSched3Area.setText("Tất cả");
                         activity.btnSched3Active.setOn(isActive);
                     }
+                    else if (nameFeed.equals("notification")) {
+                        activity.handleNotification(lastValue);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -796,16 +818,40 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void handleNotification(String message){
+    private void handleNotification(String message) throws JSONException {
         String[] parts = message.split(",");
         if (parts[0].equals("0")) {
+            if (parts[2].equals(Constants.END)) {
+                txtCycle1.setText(schedule1.getString("startTime"));
+                btnActive1.setEnabled(true);
+                btnActive1.setOn(btnActive1.isOn());
+            }
+            else {
+                btnActive1.setEnabled(false);
+            }
             handleStatus(parts, txtStatus1, txtCycle1);
         }
         else if (parts[0].equals("1")) {
             handleStatus(parts, txtStatus2, txtCycle2);
+            if (parts[2].equals(Constants.END)) {
+                txtCycle2.setText(schedule2.getString("startTime"));
+                btnActive2.setEnabled(true);
+                btnActive2.setOn(btnActive2.isOn());
+            }
+            else {
+                btnActive2.setEnabled(false);
+            }
         }
         else if (parts[0].equals("2")) {
             handleStatus(parts, txtStatus3, txtCycle3);
+            if (parts[2].equals(Constants.END)) {
+                txtCycle3.setText(schedule3.getString("startTime"));
+                btnActive3.setEnabled(true);
+                btnActive3.setOn(btnActive3.isOn());
+            }
+            else {
+                btnActive3.setEnabled(false);
+            }
         }
         else
             Log.d("TEST", "Invalid Schedule");
@@ -833,8 +879,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case Constants.SELECTOR:
                 txtCycle.setText("Vòng " + (Integer.parseInt(parts[1]) + 1));
-                if (parts[3].equals(0)) area = "Vườn 1";
-                else if (parts[3].equals(1)) area = "Vườn 2";
+                if (parts[3].equals("0")) area = "Vườn 1";
+                else if (parts[3].equals("1")) area = "Vườn 2";
                 else area = "Vườn 3";
                 txtStatus.setText("Chuẩn bị tưới " + area);
                 break;
@@ -860,10 +906,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setDataStatistic() {
         SharedPreferences totalTimePreferences = getSharedPreferences("totalTime", MODE_PRIVATE);
-        long totalTime = totalTimePreferences.getLong("total_time",0);
+        long totalTime = totalTimePreferences.getLong("total_time",41956);
 
         SharedPreferences countTimesPreferences = getSharedPreferences("countTimes", MODE_PRIVATE);
-        long countTimes = countTimesPreferences.getLong("count_times",0);
+        long countTimes = countTimesPreferences.getLong("count_times",68);
 
         if(countTimes != 0) {
             txtAvgTime.setText(String.format("Thời gian gửi và xác nhận trung bình: %dms", totalTime/countTimes));

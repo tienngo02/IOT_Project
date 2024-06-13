@@ -7,33 +7,33 @@
     android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <LinearLayout
-        android:id="@+id/errorContainerSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:layout_margin="5dp"
-        android:background="@drawable/red_border_background"
-        android:padding="10dp">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/errorContainerSettings"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:background="@drawable/red_border_background"-->
+<!--        android:padding="10dp">-->
 
-        <TextView
-            android:id="@+id/textErrorMessageSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đã xảy ra lỗi! "
+<!--        <TextView-->
+<!--            android:id="@+id/textErrorMessageSettings"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Đã xảy ra lỗi! "-->
 
-            android:textColor="#000000" />
+<!--            android:textColor="#000000" />-->
 
-        <ImageButton
-            android:id="@+id/btnErrorSettings"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:src="@drawable/ic_baseline_highlight_off_24" />
-    </LinearLayout>
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnErrorSettings"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@color/white"-->
+<!--            android:src="@drawable/ic_baseline_highlight_off_24" />-->
+<!--    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,8 +56,8 @@
             android:layout_weight="20"
             android:gravity="center"
             android:text="Cài đặt"
-            android:textColor="#1E90FF"
-            android:textSize="30dp"
+            android:textColor="#1BCC0E"
+            android:textSize="25dp"
             android:textStyle="bold"></TextView>
 
 
@@ -108,14 +108,13 @@
         android:orientation="horizontal" >
 
 
-        <EditText
-            android:id="@+id/editTextTextPersonName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="aio_qOIt76BqBkY7FYKr0nOuX2MKSmJC" />
+<!--        <EditText-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:ems="10"-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:text="" />-->
 
     </LinearLayout>
 
